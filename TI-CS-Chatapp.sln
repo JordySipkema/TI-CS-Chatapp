@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TI-CS-Chatapp", "TI-CS-Chatapp\TI-CS-Chatapp.csproj", "{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatclient", "TI-CS-Chatapp\Chatclient.csproj", "{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chatserver", "Chatserver\Chatserver.csproj", "{CE5B3624-21EA-485B-A8B7-7B7F885EBC6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE5B3624-21EA-485B-A8B7-7B7F885EBC6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE5B3624-21EA-485B-A8B7-7B7F885EBC6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE5B3624-21EA-485B-A8B7-7B7F885EBC6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE5B3624-21EA-485B-A8B7-7B7F885EBC6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
