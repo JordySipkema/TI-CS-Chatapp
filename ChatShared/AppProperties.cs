@@ -1,22 +1,10 @@
 ﻿namespace ChatShared
 {
-    public class AppProperties
+    public static class AppProperties
     {
-        public static AppProperties _instance = null;
+        
+        public static int PortNumber { get; private set; }
 
-        public int PortNumber { get; private set; }
-
-        private AppProperties()
-        {
-
-
-        }
-
-        public static AppProperties GetInstance()
-        {
-            return _instance ?? (_instance = new AppProperties());
-
-        }
 
 
     }
