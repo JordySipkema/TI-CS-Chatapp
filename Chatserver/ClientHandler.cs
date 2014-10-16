@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading;
+using ChatShared.Packet;
+using ChatShared.Packet.Response;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -14,18 +15,14 @@ namespace Chatserver
         private readonly byte[] _buffer = new byte[1024];
         private const int BufferSize = 1024;
         private readonly TcpClient _tcpclient;
-        private readonly SslStream _sslStream;
+        private readonly NetworkStream _networkStream;
         private List<byte> _totalBuffer;
-
-        //private string username;
-        //private Boolean isLoggedIn;
 
         public ClientHandler(TcpClient client)
         {
             _tcpclient = client;
-            //var certificate = new X509Certificate2(Resources.invalid_certificate, "apeture");
 
-            _sslStream = new SslStream(_tcpclient.GetStream());
+            _networkStream = _tcpclient.GetStream();
             _totalBuffer = new List<byte>();
             var thread = new Thread(ThreadLoop);
             thread.Start();
@@ -36,22 +33,25 @@ namespace Chatserver
         {
             while (true)
             {
-                if (!_tcpclient.Connected)
-                    break;
                 try
                 {
-                    //new Socket().Receive(Buffer);
-                    var receiveCount = _sslStream.Read(_buffer, 0, BufferSize);
+                    //Is the client connected?
+                    if (!_tcpclient.Connected)
+                        throw new SocketException(0xDC);
+
+                    //Recieve the data from the networkStream
+                    var receiveCount = _networkStream.Read(_buffer, 0, BufferSize);
 
                     var rawData = new byte[receiveCount];
                     Array.Copy(_buffer, 0, rawData, 0, receiveCount);
                     _totalBuffer = _totalBuffer.Concat(rawData).ToList();
 
-
+                    //Check the packetsize, did we recieve anything?
                     var packetSize = Packet.GetLengthOfPacket(_totalBuffer);
                     if (packetSize == -1)
                         continue;
 
+                    //Retrieve the Json out of the recieved packet.
                     JObject json = null;
                     try
                     {
@@ -68,14 +68,13 @@ namespace Chatserver
 
                     JToken cmd;
                     JToken authToken = null;
+
                     if (!json.TryGetValue("CMD", out cmd))
                     {
                         Console.WriteLine("Got JSON that does not define a command.");
-                        continue;
+                        //continue;
                     }
 
-                    //_totalBuffer = _totalBuffer.Substring(packetSize + 4);
-                    //_totalBuffer = String.Empty;
                 }
                 catch (SocketException e)
                 {
@@ -93,10 +92,9 @@ namespace Chatserver
 
         private void Send(String s)
         {
-            //byte[] data = Encoding.UTF8.GetBytes(s.Length.ToString("0000") + s).ToArray();
-
-            _sslStream.Write(Packet.CreateByteData(s));
-            _sslStream.Flush();
+            var dataArray = Packet.CreateByteData(s);
+            _networkStream.Write(dataArray, 0, dataArray.Length);
+            _networkStream.Flush();
         }
 
         private void Send(Packet s)

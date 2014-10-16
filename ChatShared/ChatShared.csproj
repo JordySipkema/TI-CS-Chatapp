@@ -46,10 +46,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppProperties.cs" />
+    <Compile Include="Packet\Packet.cs" />
+    <Compile Include="Packet\Response\LoginResponsePacket.cs" />
+    <Compile Include="Packet\Response\ResponsePacket.cs" />
+    <Compile Include="Packet\Statuscode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Packet\Request\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

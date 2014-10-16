@@ -22,7 +22,7 @@ namespace Chatserver
         public void RunServer()
         {
             Console.WriteLine("ChatServer Status: Initializing");
-            var serverListener = new TcpListener(IPAddress.Any, AppProperties._instance.PortNumber);
+            var serverListener = new TcpListener(IPAddress.Any, AppProperties.PortNumber);
 
             //Code for getting server IP
             var serverip = Dns.GetHostEntry(Dns.GetHostName())
