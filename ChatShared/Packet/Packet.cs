@@ -32,7 +32,7 @@ namespace ChatShared.Packet
             return JObject.Parse(Encoding.UTF8.GetString(GetPacketBytes(packetSize, ref buffer).ToArray()));
         }
 
-        public static List<byte> GetPacketBytes(int packetSize, ref List<byte> buffer)
+        private static List<byte> GetPacketBytes(int packetSize, ref List<byte> buffer)
         {
             var jsonData = buffer.GetRange(4, packetSize);
             buffer.RemoveRange(0, packetSize + 4);
@@ -40,7 +40,7 @@ namespace ChatShared.Packet
         }
 
         /// <summary>
-        ///  Creates a byte array from the specified string. First four bytes contains the lengh the data. The remainder of the bytes is the data bytes created from the given string.
+        ///  Creates a byte array from the specified string. First four bytes contains the length the data. The remainder of the bytes is the data bytes created from the given string.
         /// </summary>
         public static byte[] CreateByteData(string s)
         {

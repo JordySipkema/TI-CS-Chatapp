@@ -8,7 +8,7 @@ using ChatShared.Packet.Response;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Chatserver
+namespace Chatserver.Server
 {
     internal class ClientHandler
     {

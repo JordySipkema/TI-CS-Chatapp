@@ -1,6 +1,0 @@
-﻿namespace Chatserver
-{
-    class FileHandler
-    {
-    }
-}

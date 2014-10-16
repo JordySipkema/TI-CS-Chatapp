@@ -1,4 +1,7 @@
-﻿// ReSharper disable ObjectCreationAsStatement
+﻿using Chatserver.Server;
+using ChatShared.Packet;
+using ChatShared.Packet.Response;
+// ReSharper disable ObjectCreationAsStatement
 using System;
 using System.Linq;
 using System.Net;
@@ -30,8 +33,14 @@ namespace Chatserver
                 .ToString();
             //Display server IP:
             Console.WriteLine("ChatServer IP: {0}", serverip);
-            Console.WriteLine("ChatServer Status: Listening");
+
+            //Start the server listener
             serverListener.Start();
+            Console.WriteLine("ChatServer Status: Listening");
+
+            //Console.WriteLine("Example json: Errorpacket");
+            //Console.WriteLine(new LoginResponsePacket(Statuscode.Status.Ok, "Client", "Ahsdha7w27%^hsdja^&"));
+
             while (true)
             {
                 var tcpclient = serverListener.AcceptTcpClient();
