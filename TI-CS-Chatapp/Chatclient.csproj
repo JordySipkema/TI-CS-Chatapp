@@ -77,6 +77,24 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\ChatSessionUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ChatSessionUC.Designer.cs">
+      <DependentUpon>ChatSessionUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ContactsUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ContactsUC.Designer.cs">
+      <DependentUpon>ContactsUC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\LoginscreenUC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\LoginscreenUC.Designer.cs">
+      <DependentUpon>LoginscreenUC.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -89,6 +107,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="UserControls\ChatSessionUC.resx">
+      <DependentUpon>ChatSessionUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ContactsUC.resx">
+      <DependentUpon>ContactsUC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\LoginscreenUC.resx">
+      <DependentUpon>LoginscreenUC.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
