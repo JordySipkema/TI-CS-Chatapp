@@ -6,18 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chatserver
 {
-    class Program
+    class FileHandler
     {
-        static void Main(string[] args)
-        {
-            new Program();
-        }
-
-        public Program()
-        {
-
-
-        }
-
     }
 }
