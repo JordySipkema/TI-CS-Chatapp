@@ -47,6 +47,10 @@
   <ItemGroup>
     <Compile Include="AppProperties.cs" />
     <Compile Include="Packet\Packet.cs" />
+    <Compile Include="Packet\Request\AuthenticatedPacket.cs" />
+    <Compile Include="Packet\Request\ChatPacket.cs" />
+    <Compile Include="Packet\Request\LoginPacket.cs" />
+    <Compile Include="Packet\Request\RequestPacket.cs" />
     <Compile Include="Packet\Response\LoginResponsePacket.cs" />
     <Compile Include="Packet\Response\ResponsePacket.cs" />
     <Compile Include="Packet\Statuscode.cs" />
@@ -55,9 +59,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Packet\Request\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
