@@ -12,6 +12,9 @@ namespace TI_CS_Chatapp
 {
     public partial class MainForm : Form
     {
+
+        // hoogte zonder menustrip en menubalk (-/+/x) is 700 - (24 + 39) = 637
+        // user control width/height voor login screen: 484 en 629
         public MainForm()
         {
             InitializeComponent();
@@ -19,17 +22,7 @@ namespace TI_CS_Chatapp
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void MainForm_Leave(object sender, EventArgs e)
-        {
-
+            //loginscreenUC1.Visible = true;
         }
 
 
