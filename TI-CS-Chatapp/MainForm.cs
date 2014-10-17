@@ -19,6 +19,25 @@ namespace TI_CS_Chatapp
             ucChatSession.Visible = true;
         }
 
+        private void viewLoginScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ucChatSession.Visible = false;
+            ucContacts.Visible = false;
+            loginscreenUC1.Visible = true;
+        }
+
+        private void viewContactScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ucContacts.Visible = true;
+            loginscreenUC1.Visible = false;
+        }
+
+        private void viewChatScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ucChatSession.Visible = true;
+            loginscreenUC1.Visible = false;
+        }
+
 
 
     }

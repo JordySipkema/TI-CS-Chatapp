@@ -39,6 +39,10 @@
             this.ucChatSession = new TI_CS_Chatapp.UserControls.ChatSessionUC();
             this.ucContacts = new TI_CS_Chatapp.ContactsUserControl();
             this.loginscreenUC1 = new TI_CS_Chatapp.UserControls.LoginscreenUC();
+            this.debugToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewLoginScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewContactScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewChatScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,13 +58,13 @@
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // loginLogoutToolStripMenuItem
             // 
             this.loginLogoutToolStripMenuItem.Name = "loginLogoutToolStripMenuItem";
-            this.loginLogoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.loginLogoutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loginLogoutToolStripMenuItem.Text = "Exit";
             // 
             // toolsToolStripMenuItem
@@ -96,7 +100,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.debugToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
@@ -126,6 +131,37 @@
             this.loginscreenUC1.Size = new System.Drawing.Size(584, 629);
             this.loginscreenUC1.TabIndex = 1;
             this.loginscreenUC1.Visible = false;
+            // 
+            // debugToolStripMenuItem
+            // 
+            this.debugToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewLoginScreenToolStripMenuItem,
+            this.viewContactScreenToolStripMenuItem,
+            this.viewChatScreenToolStripMenuItem});
+            this.debugToolStripMenuItem.Name = "debugToolStripMenuItem";
+            this.debugToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.debugToolStripMenuItem.Text = "Debug";
+            // 
+            // viewLoginScreenToolStripMenuItem
+            // 
+            this.viewLoginScreenToolStripMenuItem.Name = "viewLoginScreenToolStripMenuItem";
+            this.viewLoginScreenToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.viewLoginScreenToolStripMenuItem.Text = "View login screen";
+            this.viewLoginScreenToolStripMenuItem.Click += new System.EventHandler(this.viewLoginScreenToolStripMenuItem_Click);
+            // 
+            // viewContactScreenToolStripMenuItem
+            // 
+            this.viewContactScreenToolStripMenuItem.Name = "viewContactScreenToolStripMenuItem";
+            this.viewContactScreenToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.viewContactScreenToolStripMenuItem.Text = "View contact screen";
+            this.viewContactScreenToolStripMenuItem.Click += new System.EventHandler(this.viewContactScreenToolStripMenuItem_Click);
+            // 
+            // viewChatScreenToolStripMenuItem
+            // 
+            this.viewChatScreenToolStripMenuItem.Name = "viewChatScreenToolStripMenuItem";
+            this.viewChatScreenToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.viewChatScreenToolStripMenuItem.Text = "View chat screen";
+            this.viewChatScreenToolStripMenuItem.Click += new System.EventHandler(this.viewChatScreenToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -162,6 +198,10 @@
         private UserControls.LoginscreenUC loginscreenUC1;
         private ContactsUserControl ucContacts;
         private UserControls.ChatSessionUC ucChatSession;
+        private System.Windows.Forms.ToolStripMenuItem debugToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewLoginScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewContactScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewChatScreenToolStripMenuItem;
 
     }
 }
