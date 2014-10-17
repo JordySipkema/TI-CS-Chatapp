@@ -28,42 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.tbMessage = new System.Windows.Forms.TextBox();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.tbMsgHistory = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // textBox1
+            // tbMessage
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 596);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(278, 20);
-            this.textBox1.TabIndex = 0;
+            this.tbMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbMessage.Location = new System.Drawing.Point(12, 594);
+            this.tbMessage.Name = "tbMessage";
+            this.tbMessage.Size = new System.Drawing.Size(278, 21);
+            this.tbMessage.TabIndex = 0;
             // 
-            // button1
+            // btnSend
             // 
-            this.button1.Location = new System.Drawing.Point(296, 591);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 28);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnSend.Location = new System.Drawing.Point(296, 591);
+            this.btnSend.Name = "btnSend";
+            this.btnSend.Size = new System.Drawing.Size(75, 28);
+            this.btnSend.TabIndex = 1;
+            this.btnSend.Text = "Send";
+            this.btnSend.UseVisualStyleBackColor = true;
             // 
-            // textBox2
+            // tbMsgHistory
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 12);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(359, 576);
-            this.textBox2.TabIndex = 2;
+            this.tbMsgHistory.Location = new System.Drawing.Point(12, 14);
+            this.tbMsgHistory.Multiline = true;
+            this.tbMsgHistory.Name = "tbMsgHistory";
+            this.tbMsgHistory.Size = new System.Drawing.Size(359, 564);
+            this.tbMsgHistory.TabIndex = 2;
             // 
             // ChatSessionUC
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.tbMsgHistory);
+            this.Controls.Add(this.btnSend);
+            this.Controls.Add(this.tbMessage);
             this.Name = "ChatSessionUC";
             this.Size = new System.Drawing.Size(384, 629);
             this.ResumeLayout(false);
@@ -73,8 +74,8 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox tbMessage;
+        private System.Windows.Forms.Button btnSend;
+        private System.Windows.Forms.TextBox tbMsgHistory;
     }
 }

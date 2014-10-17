@@ -16,6 +16,7 @@ namespace TI_CS_Chatapp
         private void MainForm_Load(object sender, EventArgs e)
         {
             //loginscreenUC1.Visible = true;
+            ucChatSession.Visible = true;
         }
 
 
