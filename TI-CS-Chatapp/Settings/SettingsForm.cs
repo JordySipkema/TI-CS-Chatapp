@@ -17,6 +17,7 @@ namespace TI_CS_Chatapp
     {
         private bool changedFlag = false; // form value(s) changed, check it on form close
         
+
         public SettingsForm()
         {
             InitializeComponent();
@@ -68,8 +69,8 @@ namespace TI_CS_Chatapp
         private void LoadSettings()
         {
             tbServerPortNumber.Text = Convert.ToString(AppProperties.PortNumber);
-            tbServerIP.Text = Settings.ServerIP;
-            tbNickname.Text = Settings.Nickname;
+            
+            //WIP
 
             //Code for getting server IP
             var clientIP = Dns.GetHostEntry(Dns.GetHostName())
@@ -80,8 +81,7 @@ namespace TI_CS_Chatapp
 
         private void SaveAll()
         {
-            Settings.ServerIP = tbServerIP.Text;
-            Settings.Nickname = tbNickname.Text;
+            //WIP
 
             //on the end
             changedFlag = false;
