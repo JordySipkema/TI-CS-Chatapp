@@ -39,5 +39,11 @@ namespace Chatserver.FileController
 
             return x;
         }
+
+        public bool AddUser(User user)
+        {
+            _users.Add(user);
+            return true;
+        }
     }
 }

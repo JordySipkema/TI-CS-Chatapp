@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using Chatserver.FileController;
+using ChatShared.Entity;
 using ChatShared.Packet;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
@@ -36,7 +37,8 @@ namespace Chatserver.Server
 
         private void ThreadLoop()
         {
-            while (true)
+            var AbortRequested = _thread.ThreadState.HasFlag(ThreadState.AbortRequested);
+            while (!AbortRequested)
             {
                 try
                 {
@@ -90,6 +92,9 @@ namespace Chatserver.Server
                         case DisconnectPacket.DefCmd:
                             HandleDisconnectPacket(json);
                             break;
+                        case RegisterPacket.DefCmd:
+                            HandleRegisterPacket(json);
+                            break;
                     }
 
                 }
@@ -106,6 +111,18 @@ namespace Chatserver.Server
                 }
             }
             Console.WriteLine("ClientThread stopped");
+        }
+
+        private void HandleRegisterPacket(JObject json)
+        {
+            Console.WriteLine("RegisterPacket Received");
+
+            var packet = new RegisterPacket(json);
+            var user = new User(packet.Nickname, packet.Username, packet.Passhash);
+            Datastorage.Instance.AddUser(user);
+
+            var returnPacket = new ResponsePacket(Statuscode.Status.Ok);
+            Send(returnPacket);
         }
 
         private void HandleDisconnectPacket(JObject json)
