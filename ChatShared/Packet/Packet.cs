@@ -60,8 +60,10 @@ namespace ChatShared.Packet
 
         public static Packet GetPacketFromJson(JObject json)
         {
-            Packet p = null;
+            if (json == null) return null;
 
+
+            Packet p = null;
             switch ((string)json.GetValue("CMD", StringComparison.CurrentCultureIgnoreCase))
             {
                 case LoginPacket.DefCmd:
@@ -73,8 +75,17 @@ namespace ChatShared.Packet
                 case ChatPacket.DefCmd:
                     p = new ChatPacket(json);
                     break;
+                case RegisterPacket.DefCmd:
+                    p = new RegisterPacket(json);
+                    break;
+                default:
+                    try
+                    {
+                        p = new ResponsePacket(json);
+                    }
+                    catch (ArgumentException) { }
+                    break;
             }
-
             return p;
         }
 
