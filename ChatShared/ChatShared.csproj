@@ -55,6 +55,7 @@
     <Compile Include="Packet\Request\RegisterPacket.cs" />
     <Compile Include="Packet\Request\RequestPacket.cs" />
     <Compile Include="Packet\Response\LoginResponsePacket.cs" />
+    <Compile Include="Packet\Response\RegisterResponsePacket.cs" />
     <Compile Include="Packet\Response\ResponsePacket.cs" />
     <Compile Include="Packet\Statuscode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

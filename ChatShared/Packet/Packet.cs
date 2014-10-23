@@ -78,6 +78,9 @@ namespace ChatShared.Packet
                 case RegisterPacket.DefCmd:
                     p = new RegisterPacket(json);
                     break;
+                case RegisterResponsePacket.DefCmd:
+                    p = new RegisterResponsePacket(json);
+                    break;
                 case DisconnectPacket.DefCmd:
                     p = new DisconnectPacket(json);
                     break;
