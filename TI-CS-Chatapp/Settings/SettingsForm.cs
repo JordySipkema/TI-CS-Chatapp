@@ -59,7 +59,7 @@ namespace TI_CS_Chatapp
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            checkChangedFlag();
+            CheckChangedFlag();
         }
 
 
@@ -88,7 +88,7 @@ namespace TI_CS_Chatapp
         }
 
         // some code for making sure the settings is going to be saved
-        private void checkChangedFlag()
+        private void CheckChangedFlag()
         {
             if (this.changedFlag) 
             {
