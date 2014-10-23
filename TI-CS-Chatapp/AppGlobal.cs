@@ -24,6 +24,10 @@ namespace TI_CS_Chatapp
         //return true if succeed
         public bool LoginToServer(string username, string password)
         {
+            /* ***WIP***
+             * hier komt de login code voor het verbinding maken met de server enzovoort.
+            */
+
             return true;
         }
 
@@ -36,7 +40,7 @@ namespace TI_CS_Chatapp
         {
             /* ***WIP*** 
              * ik haal hieronder de informatie over het netwerk op van de server OF vanuit de cache
-             * // Users = ChatServer.Networking.GetUsers();
+             * // Users = Connection.GetUsers();
             */
             
             return Users.Select(user => user.Nickname).ToList();
