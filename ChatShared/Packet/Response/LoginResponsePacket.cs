@@ -11,16 +11,16 @@ namespace ChatShared.Packet.Response
         public string AuthToken { get; set; }
 
         #region Constructors
-        public LoginResponsePacket(Statuscode.Status status, String usertype, String authtoken)
+        public LoginResponsePacket(Statuscode.Status status, String authtoken)
             : base(status, DefCmd)
         {
-            Initialize(usertype, authtoken);
+            Initialize(authtoken);
         }
 
-        public LoginResponsePacket(String status, String description, String usertype, String authtoken) 
+        public LoginResponsePacket(String status, String description, String authtoken) 
             : base(status, description, DefCmd)
         {
-            Initialize(usertype, authtoken);
+            Initialize(authtoken);
         }
 
         public LoginResponsePacket(JObject json) : base(json)
@@ -31,15 +31,13 @@ namespace ChatShared.Packet.Response
             JToken token;
             JToken userType;
 
-            Usertype = json.TryGetValue("USERTYPE", out userType) ? userType.ToString() : null;
             AuthToken = json.TryGetValue("AUTHTOKEN", out token) ? token.ToString() : null;
         }
         #endregion
 
         #region Initializers
-        private void Initialize(String usertype, String authtoken)
+        private void Initialize(String authtoken)
         {
-            Usertype = usertype;
             AuthToken = authtoken;
         }
         #endregion
@@ -48,7 +46,6 @@ namespace ChatShared.Packet.Response
         public override JObject ToJsonObject()
         {
             var returnJson = base.ToJsonObject();
-            returnJson.Add("USERTYPE", Usertype);
             returnJson.Add("AUTHTOKEN", AuthToken);
 
             return returnJson;

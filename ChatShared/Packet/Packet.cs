@@ -51,5 +51,15 @@ namespace ChatShared.Packet
         }
 
         public abstract JObject ToJsonObject();
+
+        public static implicit operator JObject(Packet packet)
+        {
+            return packet.ToJsonObject();
+        }
+
+        public static implicit operator String(Packet packet)
+        {
+            return packet.ToString();
+        }
     }
 }

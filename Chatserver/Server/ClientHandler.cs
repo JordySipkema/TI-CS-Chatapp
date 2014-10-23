@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
+using Chatserver.FileController;
+using ChatShared.Entity;
 using ChatShared.Packet;
+using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,9 +20,11 @@ namespace Chatserver.Server
         private readonly TcpClient _tcpclient;
         private readonly NetworkStream _networkStream;
         private List<byte> _totalBuffer;
+        private readonly Datastorage _datastorage;
 
         public ClientHandler(TcpClient client)
         {
+            _datastorage = Datastorage.Instance;
             _tcpclient = client;
 
             _networkStream = _tcpclient.GetStream();
@@ -72,7 +77,17 @@ namespace Chatserver.Server
                     if (!json.TryGetValue("CMD", out cmd))
                     {
                         Console.WriteLine("Got JSON that does not define a command.");
-                        //continue;
+                        continue;
+                    }
+
+                    switch ((string)cmd)
+                    {
+                        case ChatPacket.DefCmd:
+                            HandleChatPacket(json);
+                            break;
+                        case LoginPacket.DefCmd:
+                            HandleLoginPacket(json);
+                            break;
                     }
 
                 }
@@ -88,6 +103,38 @@ namespace Chatserver.Server
                     break;
                 }
             }
+        }
+
+        private void HandleLoginPacket(JObject json)
+        {
+            Console.WriteLine("Login packet recieved");
+            //Recieve the username and password from json.
+            var username = json["username"].ToString();
+            var password = json["password"].ToString();
+
+            JObject returnJson;
+            //Code to check User/pass here
+            if (Authentication.Authenticate(username, password, this))
+            {
+                returnJson = new LoginResponsePacket(
+                    Statuscode.Status.Ok,
+                    Authentication.GetUser(username).AuthToken
+                    );
+
+            }
+            else //If the code reaches this point, the authentification has failed.
+            {
+                returnJson = new ResponsePacket(Statuscode.Status.InvalidUsernameOrPassword, "RESP-LOGIN");
+            }
+
+            //Send the result back to the client.
+            Console.WriteLine(returnJson.ToString());
+            Send(returnJson.ToString());
+        }
+
+        private void HandleChatPacket(JObject json)
+        {
+            throw new NotImplementedException();
         }
 
         public void Send(String s)
