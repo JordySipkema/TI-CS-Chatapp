@@ -15,6 +15,22 @@ namespace TI_CS_Chatapp
         public ContactsUserControl()
         {
             InitializeComponent();
+
+        }
+
+        public void LoadContacts(List<string> contactNames)
+        {
+            contactNames.Sort();
+            foreach (string s in contactNames)
+            {
+                lboxContacts.Items.Add(s);
+            }
+
+        }
+
+        public void RemoveContactsFromListBox()
+        {
+            lboxContacts.Items.Clear();
         }
     }
 }

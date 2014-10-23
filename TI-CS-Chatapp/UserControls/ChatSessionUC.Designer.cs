@@ -53,9 +53,11 @@
             // 
             // tbMsgHistory
             // 
+            this.tbMsgHistory.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.tbMsgHistory.Location = new System.Drawing.Point(12, 40);
             this.tbMsgHistory.Multiline = true;
             this.tbMsgHistory.Name = "tbMsgHistory";
+            this.tbMsgHistory.ReadOnly = true;
             this.tbMsgHistory.Size = new System.Drawing.Size(359, 538);
             this.tbMsgHistory.TabIndex = 2;
             // 

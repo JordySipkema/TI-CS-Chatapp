@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5610C7E6-B316-42ED-AF9C-934FF16EB2D4}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TI_CS_Chatapp</RootNamespace>
     <AssemblyName>TI-CS-Chatapp</AssemblyName>
@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppGlobal.cs" />
     <Compile Include="ClientSocket.cs" />
     <Compile Include="Controller\TCPController.cs" />
     <Compile Include="MainForm.cs">

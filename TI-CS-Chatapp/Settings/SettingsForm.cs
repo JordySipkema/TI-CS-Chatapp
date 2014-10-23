@@ -88,7 +88,6 @@ namespace TI_CS_Chatapp
         {
             Properties.Settings.Default.Nickname = tbNickname.Text;
             Properties.Settings.Default.ServerIP = tbServerIP.Text;
-            Properties.Settings.Default.Save();
             //on the end
             changedFlag = false;
         }
