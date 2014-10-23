@@ -13,7 +13,6 @@ namespace TI_CS_Chatapp.Controller
     {
         private static TcpClient _client;
         public static Boolean Busy { get; private set; }
-        private static string _response = String.Empty;
 
         public delegate void ReceivedPacket(Packet p);
 
@@ -21,9 +20,6 @@ namespace TI_CS_Chatapp.Controller
 
         public static bool IsReading { get; private set; }
         private static List<byte> _totalBuffer = new List<byte>();
-
-        private static ManualResetEvent sendDone =
-            new ManualResetEvent(false);
 
         public static void RunClient()
         {

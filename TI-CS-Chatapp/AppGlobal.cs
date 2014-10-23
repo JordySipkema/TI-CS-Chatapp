@@ -1,25 +1,22 @@
-﻿using System;
+﻿using ChatShared.Entity;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChatShared;
-using ChatShared.Entity;
 
 namespace TI_CS_Chatapp
 {
     public class AppGlobal
     {
-        private List<User> Users;
+        private readonly List<User> Users;
 
         public AppGlobal () {
             
             //debug
-            Users = new List<User>();
-            Users.Add(new User("Jordy", "jordy", "123"));
-            Users.Add(new User("Bart", "bart", "456"));
-            Users.Add(new User("Klaas", "klaas", "789"));
-
+            Users = new List<User>
+            {
+                new User("Jordy", "jordy", "123"),
+                new User("Bart", "bart", "456"),
+                new User("Klaas", "klaas", "789")
+            };
         }
         //return true if succeed
         public bool LoginToServer(string username, string password)
