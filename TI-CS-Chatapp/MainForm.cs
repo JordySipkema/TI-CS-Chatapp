@@ -17,6 +17,7 @@ namespace TI_CS_Chatapp
         {
             //loginscreenUC1.Visible = true;
             ucChatSession.Visible = true;
+            ucContacts.Visible = true;
         }
 
         private void viewLoginScreenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -44,7 +45,15 @@ namespace TI_CS_Chatapp
 
         }
 
+        private void loginLogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
-
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
+        
     }
 }

@@ -52,20 +52,21 @@
             this.logoutToolStripMenuItem,
             this.loginLogoutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.fileToolStripMenuItem.Text = "Chatapp";
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             // 
             // loginLogoutToolStripMenuItem
             // 
             this.loginLogoutToolStripMenuItem.Name = "loginLogoutToolStripMenuItem";
-            this.loginLogoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.loginLogoutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.loginLogoutToolStripMenuItem.Text = "Exit";
+            this.loginLogoutToolStripMenuItem.Click += new System.EventHandler(this.loginLogoutToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -78,7 +79,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -178,6 +179,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Chatapp";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

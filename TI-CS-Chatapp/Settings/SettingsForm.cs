@@ -16,7 +16,7 @@ namespace TI_CS_Chatapp
     public partial class SettingsForm : Form
     {
         private bool changedFlag = false; // form value(s) changed, check it on form close
-        
+
 
         public SettingsForm()
         {
@@ -41,10 +41,13 @@ namespace TI_CS_Chatapp
             this.changedFlag = false;
             this.Close();
         }
-        
+
         private void tbServerIP_TextChanged(object sender, EventArgs e)
         {
-            this.changedFlag = true;
+            if (Properties.Settings.Default.ServerIP != tbServerIP.Text)
+            {
+                this.changedFlag = true;
+            }
         }
 
         private void tbServerPortNumber_TextChanged(object sender, EventArgs e)
@@ -54,7 +57,10 @@ namespace TI_CS_Chatapp
 
         private void tbNickname_TextChanged(object sender, EventArgs e)
         {
-            this.changedFlag = true;
+            if (Properties.Settings.Default.Nickname != tbNickname.Text)
+            {
+                this.changedFlag = true;
+            }
         }
 
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
@@ -90,14 +96,14 @@ namespace TI_CS_Chatapp
         // some code for making sure the settings is going to be saved
         private void CheckChangedFlag()
         {
-            if (this.changedFlag) 
+            if (this.changedFlag)
             {
-                if (MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes) 
+                if (MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    this.SaveAll(); 
+                    this.SaveAll();
                 }
             }
-            
+
         }
 
     }
