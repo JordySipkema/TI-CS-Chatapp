@@ -17,12 +17,7 @@ namespace TI_CS_Chatapp
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
-            Settings.loadSettingsFromFile();
         }
 
-        static void startClientSocket()
-        {
-            clientSocket = new ClientSocket(Settings.ServerIP, AppProperties.PortNumber);
-        }
     }
 }
