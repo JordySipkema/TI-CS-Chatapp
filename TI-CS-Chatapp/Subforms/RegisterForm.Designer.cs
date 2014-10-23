@@ -50,11 +50,11 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(63, 94);
+            this.btnSave.Location = new System.Drawing.Point(48, 94);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(92, 23);
+            this.btnSave.Size = new System.Drawing.Size(107, 23);
             this.btnSave.TabIndex = 21;
-            this.btnSave.Text = "Save and close";
+            this.btnSave.Text = "Register and close";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 

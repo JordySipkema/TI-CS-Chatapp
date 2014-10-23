@@ -19,6 +19,7 @@ namespace TI_CS_Chatapp
         public delegate void ResultDelegate(string status);
         public event ResultDelegate LoginResultEvent;
         public static event ResultDelegate RegisterResultEvent;
+        public event ResultDelegate ResultEvent;
 
         public AppGlobal()
         {
@@ -56,6 +57,26 @@ namespace TI_CS_Chatapp
             
 
         }
+        
+        void PacketReceived(Packet p)
+        {
+            if (p is LoginResponsePacket)
+            {
+                var packet = p as LoginResponsePacket;
+                OnLoginResultEvent(packet.Status);
+            }
+            else if (p is RegisterResponsePacket)
+            {
+                var packet = p as RegisterResponsePacket;
+                OnRegisterResultEvent(packet.Status);
+            }
+            else if (p is ResponsePacket)
+            {
+                var packet = p as ResponsePacket;
+                OnResultEvent(packet);
+            }
+        }
+
         private void OnLoginResultEvent(string status)
         {
             ResultDelegate handler = LoginResultEvent;
@@ -68,19 +89,10 @@ namespace TI_CS_Chatapp
             if (handler != null) handler(status);
         }
 
-        void PacketReceived(Packet p)
+        private void OnResultEvent(Packet packet)
         {
-            if (p is LoginResponsePacket)
-            {
-                var packet = p as LoginResponsePacket;
-                OnLoginResultEvent(packet.Status);
-            }
-            if (p is RegisterResponsePacket)
-            {
-                var packet = p as ResponsePacket;
-                OnRegisterResultEvent(packet.Status);
-
-            }
+            ResultDelegate handler = ResultEvent;
+            if (handler != null) handler(packet);
         }
 
         public void SetRememberPassword(bool remember)
