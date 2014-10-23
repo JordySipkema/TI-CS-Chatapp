@@ -24,5 +24,3 @@ namespace ChatShared.Packet.Response
         #endregion
     }
 }
-
-}
