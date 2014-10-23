@@ -1,12 +1,10 @@
 ﻿using Chatserver.Server;
-using ChatShared.Packet;
-using ChatShared.Packet.Response;
-// ReSharper disable ObjectCreationAsStatement
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using ChatShared;
+
+// ReSharper disable ObjectCreationAsStatement
 
 namespace Chatserver
 {
