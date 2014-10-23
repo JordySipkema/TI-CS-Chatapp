@@ -103,11 +103,10 @@ namespace Chatserver.Server
                     if (e.InnerException is SocketException)
                     {
                         Console.WriteLine("Client with IP-address: {0} has been disconnected",
-                            _tcpclient.Client.LocalEndPoint);
+                            _tcpclient.Client.RemoteEndPoint);
                         _thread.Abort();
                     }
                     Console.WriteLine(e.Message);
-                    break;
                 }
             }
             Console.WriteLine("ClientThread stopped");
@@ -121,8 +120,13 @@ namespace Chatserver.Server
             var user = new User(packet.Nickname, packet.Username, packet.Passhash);
             Datastorage.Instance.AddUser(user);
 
-            var returnPacket = new ResponsePacket(Statuscode.Status.Ok);
+            var returnPacket = new RegisterResponsePacket(Statuscode.Status.Ok);
             Send(returnPacket);
+
+#if DEBUG
+            Console.WriteLine(packet.ToString());
+            Console.WriteLine(returnPacket.ToString());
+#endif
         }
 
         private void HandleDisconnectPacket(JObject json)
@@ -139,6 +143,11 @@ namespace Chatserver.Server
             }
 
             Send(returnPacket);
+
+#if DEBUG
+            Console.WriteLine(packet.ToString());
+            Console.WriteLine(returnPacket.ToString());
+#endif
         }
 
         private void HandleLoginPacket(JObject json)
@@ -163,8 +172,11 @@ namespace Chatserver.Server
             }
 
             //Send the result back to the client.
-            Console.WriteLine(returnJson.ToString());
             Send(returnJson.ToString());
+#if DEBUG
+            Console.WriteLine(packet.ToString());
+            Console.WriteLine(returnJson.ToString());
+#endif
         }
 
         private void HandleChatPacket(JObject json)
