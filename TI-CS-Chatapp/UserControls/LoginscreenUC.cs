@@ -14,7 +14,14 @@ namespace TI_CS_Chatapp.UserControls
     {
         public LoginscreenUC()
         {
+            
             InitializeComponent();
+        }
+
+        private void lblSignin_Click(object sender, EventArgs e)
+        {
+            MainForm MyForm = (MainForm)this.Parent;
+            MyForm.Login(tbUsername.Text, tbPassword.Text, chkPassword.CheckState.HasFlag(CheckState.Checked));
         }
 
 

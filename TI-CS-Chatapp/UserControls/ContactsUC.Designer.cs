@@ -34,10 +34,12 @@
             // 
             // lboxContacts
             // 
+            this.lboxContacts.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lboxContacts.FormattingEnabled = true;
+            this.lboxContacts.ItemHeight = 15;
             this.lboxContacts.Location = new System.Drawing.Point(13, 41);
             this.lboxContacts.Name = "lboxContacts";
-            this.lboxContacts.Size = new System.Drawing.Size(175, 576);
+            this.lboxContacts.Size = new System.Drawing.Size(175, 574);
             this.lboxContacts.TabIndex = 0;
             // 
             // label1

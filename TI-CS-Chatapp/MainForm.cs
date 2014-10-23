@@ -8,16 +8,19 @@ namespace TI_CS_Chatapp
 
         // hoogte zonder menustrip en menubalk (-/+/x) is 700 - (24 + 39) = 637
         // user control width/height voor login screen: 484 en 629
-        public MainForm()
+        private AppGlobal Global; 
+        public MainForm(AppGlobal global)
         {
             InitializeComponent();
+            Global = global;
         }
 
+        // ** begin of events ** //
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //loginscreenUC1.Visible = true;
-            ucChatSession.Visible = true;
-            ucContacts.Visible = true;
+            //debug
+            loginscreenUC1.Visible = true;
+            //end debug
         }
 
         private void viewLoginScreenToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,15 +48,60 @@ namespace TI_CS_Chatapp
 
         }
 
-        private void loginLogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Logout();
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExitApp();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            ExitApp();
         }
+
+        private void toolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        
+        // ** end of events ** //
+
+        private void LoadContactsIntoListBox()
+        {
+            ucContacts.LoadContacts(Global.InitializeContacts());
+        }
+
+        public void Login(string username, string password, bool rememberPassword)
+        {
+            loginscreenUC1.Visible = false;
+            ucChatSession.Visible = true;
+            ucContacts.Visible = true;
+            bool successful = Global.LoginToServer(username, password);
+            Global.SetRememberPassword(rememberPassword);
+            if (successful)
+            {
+                LoadContactsIntoListBox();
+            }
+        }
+
+        public void Logout()
+        {
+            ucContacts.RemoveContactsFromListBox();
+            ucChatSession.Visible = false;
+            ucContacts.Visible = false;
+            loginscreenUC1.Visible = true;
+        }
+
+        public void ExitApp()
+        {
+            Logout();
+            Global.Exiting();
+            Application.Exit();
+        }        
         
     }
 }
