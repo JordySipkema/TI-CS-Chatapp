@@ -7,8 +7,6 @@ namespace ChatShared
 {
     public static class AppProperties
     {
-        public static int PortNumber = 9876;
-
 
         // Temporary location for this method
         // This method will be moved in the future

@@ -26,9 +26,9 @@ namespace ChatShared.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("9876")]
-        public string PortNumber {
+        public int PortNumber {
             get {
-                return ((string)(this["PortNumber"]));
+                return ((int)(this["PortNumber"]));
             }
         }
     }
