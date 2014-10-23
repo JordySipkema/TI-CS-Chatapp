@@ -11,9 +11,10 @@ namespace ChatShared.Entity
         public string Nickname { get; private set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
+        public string AuthToken { get; set; }
 
         public List<ChatMessage> Messages { get; set; }
-        
+
         public User(string nickname, string username, string password)
         {
             Nickname = nickname;
