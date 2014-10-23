@@ -52,9 +52,15 @@ namespace ChatShared.Packet
             return data;
         }
 
+        public static Packet RetrievePacket(int packetSize, ref List<byte> buffer)
+        {
+            var json = RetrieveJson(packetSize, ref buffer);
+            return json == null ? null : GetPacketFromJson(json);
+        }
+
         public static Packet GetPacketFromJson(JObject json)
         {
-            Packet p;
+            Packet p = null;
 
             switch ((string)json.GetValue("CMD", StringComparison.CurrentCultureIgnoreCase))
             {

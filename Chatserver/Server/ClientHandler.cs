@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using Chatserver.FileController;
-using ChatShared.Entity;
 using ChatShared.Packet;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
