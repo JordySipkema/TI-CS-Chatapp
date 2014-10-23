@@ -16,14 +16,14 @@ namespace ChatShared.Entity
         
         public User(string nickname, string username, string password)
         {
-            this.Nickname = nickname;
-            this.Username = username;
-            this.Password = password;
+            Nickname = nickname;
+            Username = username;
+            Password = password;
         }
 
-        public void changeNickname(string nickname)
+        public void ChangeNickname(string nickname)
         {
-            this.Nickname = nickname;
+            Nickname = nickname;
         }
 
         public void ChangePassword()
