@@ -14,6 +14,7 @@ namespace Chatserver.Server
 {
     internal class ClientHandler : IClientHandler
     {
+        private readonly Thread _thread;
         private readonly byte[] _buffer = new byte[1024];
         private const int BufferSize = 1024;
         private readonly TcpClient _tcpclient;
@@ -28,8 +29,8 @@ namespace Chatserver.Server
 
             _networkStream = _tcpclient.GetStream();
             _totalBuffer = new List<byte>();
-            var thread = new Thread(ThreadLoop);
-            thread.Start();
+            _thread = new Thread(ThreadLoop);
+            _thread.Start();
 
         }
 
@@ -89,18 +90,19 @@ namespace Chatserver.Server
                     }
 
                 }
-                catch (SocketException e)
-                {
-                    Console.WriteLine("Client with IP-address: {0} has been disconnected",
-                        _tcpclient.Client.LocalEndPoint);
-                    Console.WriteLine(e.Message);
-                }
                 catch (Exception e)
                 {
+                    if (e.InnerException is SocketException)
+                    {
+                        Console.WriteLine("Client with IP-address: {0} has been disconnected",
+                            _tcpclient.Client.LocalEndPoint);
+                        _thread.Abort();
+                    }
                     Console.WriteLine(e.Message);
                     break;
                 }
             }
+            Console.WriteLine("ClientThread stopped");
         }
 
         private void HandleLoginPacket(JObject json)

@@ -27,11 +27,11 @@ namespace ChatShared.Packet.Response
             if (json == null)
                 throw new ArgumentNullException("json", "LoginResponsepacket ctor: json is null!");
 
+            if (Status != "200") return;
+
             JToken authToken;
-
             if (!(json.TryGetValue("AUTHTOKEN", StringComparison.CurrentCultureIgnoreCase, out authToken)))
-                throw new ArgumentException("AUTHTOKEN is not found in json" + json);
-
+                throw new ArgumentException("AUTHTOKEN is not found in json \n" + json);
             Initialize(authToken.ToString());
         }
         #endregion

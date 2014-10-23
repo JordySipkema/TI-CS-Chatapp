@@ -51,6 +51,7 @@
     <Compile Include="Packet\Request\AuthenticatedPacket.cs" />
     <Compile Include="Packet\Request\ChatPacket.cs" />
     <Compile Include="Packet\Request\LoginPacket.cs" />
+    <Compile Include="Packet\Request\RegisterPacket.cs" />
     <Compile Include="Packet\Request\RequestPacket.cs" />
     <Compile Include="Packet\Response\LoginResponsePacket.cs" />
     <Compile Include="Packet\Response\ResponsePacket.cs" />

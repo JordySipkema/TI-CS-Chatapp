@@ -15,7 +15,7 @@ namespace ChatShared.Packet.Response
         {
             Initialize(cmd);
         }
-
+        
         public ResponsePacket(Statuscode.Status status, string cmd = null)
         {
             Initialize(
