@@ -56,7 +56,7 @@ namespace Chatserver.Server
                     if (packetSize == -1)
                         continue;
 
-                    //Retrieve the Json out of the recieved packet.
+                    //Retrieve the Json out of the received packet.
                     JObject json = null;
                     try
                     {
@@ -87,6 +87,9 @@ namespace Chatserver.Server
                         case LoginPacket.DefCmd:
                             HandleLoginPacket(json);
                             break;
+                        case DisconnectPacket.DefCmd:
+                            HandleDisconnectPacket(json);
+                            break;
                     }
 
                 }
@@ -105,9 +108,25 @@ namespace Chatserver.Server
             Console.WriteLine("ClientThread stopped");
         }
 
+        private void HandleDisconnectPacket(JObject json)
+        {
+            Console.WriteLine("DisconnectPacket Received");
+
+            var packet = new DisconnectPacket(json);
+
+            var returnPacket = new ResponsePacket(Statuscode.Status.Unauthorized);
+            if (Authentication.Authenticate(packet.AuthToken))
+            {
+                Authentication.ReleaseAuthToken(packet.AuthToken);
+                returnPacket = new ResponsePacket(Statuscode.Status.Ok);
+            }
+
+            Send(returnPacket);
+        }
+
         private void HandleLoginPacket(JObject json)
         {
-            Console.WriteLine("Login packet recieved");
+            Console.WriteLine("Login packet received");
             //Recieve the username and password from json.
             var packet = new LoginPacket(json);
 
