@@ -13,6 +13,21 @@ namespace ChatShared.Packet.Request
         public String Message { get; private set; }
         public String UsernameDestination { get; private set; }
 
+        public ChatPacket(JObject json) : base(json)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json", "Chatpacket ctor: json is null!");
+
+            JToken message;
+            JToken usernameDestination;
+
+            if (!(json.TryGetValue("message", StringComparison.CurrentCultureIgnoreCase, out message)
+                && json.TryGetValue("UsernameDestination", StringComparison.CurrentCultureIgnoreCase, out usernameDestination)))
+                throw new ArgumentException("Message or UsernameDestination is not found in json: \n" + json);
+
+            Initialize((string)message, (string)usernameDestination);
+        }
+
         public ChatPacket(string message, string usernameDestination, string authtoken)
             : base(DefCmd, authtoken)
         {

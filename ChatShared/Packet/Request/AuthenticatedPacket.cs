@@ -14,9 +14,17 @@ namespace ChatShared.Packet.Request
             Initialize(authtoken);
         }
 
-        protected AuthenticatedPacket(JObject json, string cmd) : base(cmd)
+        protected AuthenticatedPacket(JObject json) : base(json)
         {
-            Initialize(json["AUTHTOKEN"].ToString());
+            if (json == null)
+                throw new ArgumentNullException("json", "Authenticatedpacket ctor: json is null!");
+
+            JToken authToken;
+
+            if (!(json.TryGetValue("AUTHTOKEN", StringComparison.CurrentCultureIgnoreCase, out authToken)))
+                throw new ArgumentException("Authtoken is not found in json: \n" + json);
+
+            Initialize((string)authToken);
         }
 
         private void Initialize(string authtoken)

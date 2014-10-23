@@ -11,10 +11,6 @@ namespace ChatShared.Packet.Response
         public string CMD { get; private set; }
 
         #region Constructors
-        public ResponsePacket()
-        {
-        }
-
         public ResponsePacket(String cmd)
         {
             Initialize(cmd);
@@ -32,12 +28,16 @@ namespace ChatShared.Packet.Response
 
         public ResponsePacket(JObject json)
         {
+            if (json == null)
+                throw new ArgumentNullException("json", "Requestpacket ctor: json is null!");
+
             JToken status;
             JToken description;
             JToken cmd;
 
-            if (!(json.TryGetValue("STATUS", out status) && json.TryGetValue("DESCRIPTION", out description)))
-                throw new InvalidOperationException("Neither status or description where found in the JObject.");
+            if (!(json.TryGetValue("STATUS", StringComparison.CurrentCultureIgnoreCase, out status) 
+                && json.TryGetValue("DESCRIPTION", StringComparison.CurrentCultureIgnoreCase, out description)))
+                throw new ArgumentException("STATUS or DESCRIPTION is not found in json" + json);
 
             var cmdS = json.TryGetValue("CMD", out cmd) ? cmd.ToString() : null;
             var statusS = status.ToString();

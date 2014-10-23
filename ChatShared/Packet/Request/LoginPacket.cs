@@ -1,4 +1,5 @@
 ﻿using System;
+using ChatShared.Entity;
 using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet.Request
@@ -12,6 +13,22 @@ namespace ChatShared.Packet.Request
 
         public String Username { get; private set; }
         public String Passhash { get; private set; }
+
+        public LoginPacket(JObject json) 
+            : base(json)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json", "Loginpacket ctor: json is null!");
+
+            JToken username;
+            JToken password;
+
+            if (!(json.TryGetValue("username", StringComparison.CurrentCultureIgnoreCase, out username)
+                && json.TryGetValue("password", StringComparison.CurrentCultureIgnoreCase, out password)))
+                throw new ArgumentException("Username or password is not found in json: \n" + json);
+
+            Initialize((string)username, (string)password);
+        }
 
         public LoginPacket(string username, string passhash)
             : base(DefCmd)

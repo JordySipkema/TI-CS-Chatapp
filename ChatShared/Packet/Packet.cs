@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ChatShared.Packet.Request;
+using ChatShared.Packet.Response;
 using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet
@@ -48,6 +50,26 @@ namespace ChatShared.Packet
             var length = BitConverter.GetBytes(bytes.Length);
             var data = length.Concat(bytes).ToArray();
             return data;
+        }
+
+        public static Packet GetPacketFromJson(JObject json)
+        {
+            Packet p;
+
+            switch ((string)json.GetValue("CMD", StringComparison.CurrentCultureIgnoreCase))
+            {
+                case LoginPacket.DefCmd:
+                    p = new LoginPacket(json);
+                    break;
+                case LoginResponsePacket.DefCmd:
+                    p = new LoginResponsePacket(json);
+                    break;
+                case ChatPacket.DefCmd:
+                    p = new ChatPacket(json);
+                    break;
+            }
+
+            return p;
         }
 
         public abstract JObject ToJsonObject();

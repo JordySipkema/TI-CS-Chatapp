@@ -17,7 +17,20 @@ namespace ChatShared.Packet.Request
         protected RequestPacket(string cmd)
         {
             Initialize(cmd);
-        } 
+        }
+
+        public RequestPacket(JObject json)
+        {
+            if (json == null)
+                throw new ArgumentNullException("json", "Requestpacket ctor: json is null!");
+
+            JToken cmd;
+
+            if (!(json.TryGetValue("CMD", StringComparison.CurrentCultureIgnoreCase, out cmd)))
+                throw new ArgumentException("CMD is not found in json" + json);
+
+            Initialize((string)cmd);
+        }
         #endregion
 
         #region Initializers

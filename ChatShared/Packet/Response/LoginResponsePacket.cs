@@ -7,8 +7,7 @@ namespace ChatShared.Packet.Response
     {
         public const string DefCmd = "RESP-LOGIN";
 
-        public string Usertype { get; set; }
-        public string AuthToken { get; set; }
+        public string AuthToken { get; private set; }
 
         #region Constructors
         public LoginResponsePacket(Statuscode.Status status, String authtoken)
@@ -25,13 +24,15 @@ namespace ChatShared.Packet.Response
 
         public LoginResponsePacket(JObject json) : base(json)
         {
-            if(json["CMD"].ToString() != DefCmd)
-                throw new InvalidOperationException("Wrong command type.");
+            if (json == null)
+                throw new ArgumentNullException("json", "LoginResponsepacket ctor: json is null!");
 
-            JToken token;
-            JToken userType;
+            JToken authToken;
 
-            AuthToken = json.TryGetValue("AUTHTOKEN", out token) ? token.ToString() : null;
+            if (!(json.TryGetValue("AUTHTOKEN", StringComparison.CurrentCultureIgnoreCase, out authToken)))
+                throw new ArgumentException("AUTHTOKEN is not found in json" + json);
+
+            Initialize(authToken.ToString());
         }
         #endregion
 
