@@ -1,15 +1,14 @@
-﻿using System;
+﻿
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ChatShared
+namespace ChatShared.Utilities
 {
-    public static class AppProperties
+    public static class Crypto
     {
-
-        // Temporary location for this method
-        // This method will be moved in the future
+        // ReSharper disable once InconsistentNaming
         public static String CreateSHA256(String value)
         {
             var crypt = new SHA256Managed();
@@ -18,6 +17,5 @@ namespace ChatShared
 
             return crypto.Aggregate(hash, (current, bit) => current + bit.ToString("x2"));
         }
-
     }
 }

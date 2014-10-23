@@ -1,21 +1,31 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using Chatserver.FileController;
 using ChatShared;
+using ChatShared.Entity;
+using ChatShared.Utilities;
 
 namespace Chatserver.Server
 {
     static class Authentication
     {
         //ConcurrentDictionary to enhance thread safety.
-        private static readonly ConcurrentDictionary<User, IClientHandler> AuthUsers = new ConcurrentDictionary<User, IClientHandler>();
+        private static readonly ConcurrentDictionary<User, IClientHandler> AuthUsers 
+            = new ConcurrentDictionary<User, IClientHandler>();
 
         public static Boolean Authenticate(String username, String passhash, IClientHandler clientHandler)
         {
-            //check that user and passhash are valid.
-            //TODO: Create connection with database and check the the user is valid.    
+            //check that user and passhash are valid.  
+            var user = Datastorage.Instance.GetUser(username);
+
+            // if the user is null, there is no user found. 
+            // => return false (authentication failed).
+            if (user == null)  return false;
+            // if the password is not equals to the passhash, 
+            // the password is incorrect. => return false (auth failed).
+            if (user.Password != passhash) return false;
 
             //Creating the hash (AuthToken)
             //1. Prepare the string for hashing (user-passhash-milliseconds_since_epoch)
@@ -25,13 +35,9 @@ namespace Chatserver.Server
             var aboutToHash = String.Format("{0}-{1}-{2}", username, passhash, millis);
 
             //2. Hash the string.
-            var hash = AppProperties.CreateSHA256(aboutToHash);
+            var hash = Crypto.CreateSHA256(aboutToHash);
 
-            // TODO: 3. Create the user (to store in the AuthUsers-dictonairy
-            // TODO: Link the authtoken to the user
-
-            // Example: 
-            var user = new User();
+            //3. Link the authtoken to the user
             user.AuthToken = hash;
 
             //4. Add the user to the AuthUsers class.
@@ -69,15 +75,5 @@ namespace Chatserver.Server
         {
             return AuthUsers.Keys.ToList();
         }
-    }
-
-
-    // Tijdelijk internal-class om errors te voorkomen
-    // Zodra er een echte data-model is, wordt deze klasse verwijderd.
-    // TODO: Remove the internal User class
-    internal class User
-    {
-        public String AuthToken = "ERROR: PLACEHOLDER FOR AUTHTOKEN";
-        public String Username = "ERROR: PLACEHOLDER FOR USERNAME";
     }
 }
