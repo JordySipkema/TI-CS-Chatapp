@@ -8,13 +8,13 @@ namespace ChatShared.Packet.Request
         //Inherited fields: CMD
         //Introduced fields: Username, Password (hash)
 
-        private const string Cmd = "LOGIN";
+        public const string DefCmd = "LOGIN";
 
         public String Username { get; private set; }
         public String Passhash { get; private set; }
 
         public LoginPacket(string username, string passhash)
-            : base(Cmd)
+            : base(DefCmd)
         {
             Initialize(username, passhash);
         }

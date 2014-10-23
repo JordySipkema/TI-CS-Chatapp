@@ -5,27 +5,27 @@ namespace ChatShared.Packet.Response
 {
     public class LoginResponsePacket : ResponsePacket
     {
-        public const string LoginRcmd = "RESP-LOGIN";
+        public const string DefCmd = "RESP-LOGIN";
 
         public string Usertype { get; set; }
         public string AuthToken { get; set; }
 
         #region Constructors
         public LoginResponsePacket(Statuscode.Status status, String usertype, String authtoken)
-            : base(status, LoginRcmd)
+            : base(status, DefCmd)
         {
             Initialize(usertype, authtoken);
         }
 
         public LoginResponsePacket(String status, String description, String usertype, String authtoken) 
-            : base(status, description, LoginRcmd)
+            : base(status, description, DefCmd)
         {
             Initialize(usertype, authtoken);
         }
 
         public LoginResponsePacket(JObject json) : base(json)
         {
-            if(json["CMD"].ToString() != LoginRcmd)
+            if(json["CMD"].ToString() != DefCmd)
                 throw new InvalidOperationException("Wrong command type.");
 
             JToken token;

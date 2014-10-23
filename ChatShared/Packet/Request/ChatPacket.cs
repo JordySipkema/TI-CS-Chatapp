@@ -8,7 +8,7 @@ namespace ChatShared.Packet.Request
         //Inherited fields: CMD, AUTHTOKEN
         //Introduced fields: Message, UsernameDestination
 
-        private const string DefCmd = "CHAT";
+        public const string DefCmd = "CHAT";
 
         public String Message { get; private set; }
         public String UsernameDestination { get; private set; }
