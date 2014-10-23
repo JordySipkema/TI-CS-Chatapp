@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using ChatShared.Packet;
 
 namespace TI_CS_Chatapp.Controller
@@ -11,17 +10,26 @@ namespace TI_CS_Chatapp.Controller
     // ReSharper disable once InconsistentNaming
     public class TCPController
     {
-        private static TcpClient _client;
-        public static Boolean Busy { get; private set; }
+        private static TCPController _instance;
+        public TCPController Instance
+        {
+            get { return _instance ?? (_instance = new TCPController()); }
+        }
 
+        private TcpClient _client;
+        public Boolean Busy { get; private set; }
         public delegate void ReceivedPacket(Packet p);
+        public event ReceivedPacket OnPacketReceived;
 
-        public static event ReceivedPacket OnPacketReceived;
+        public bool IsReading { get; private set; }
+        private List<byte> _totalBuffer = new List<byte>();
 
-        public static bool IsReading { get; private set; }
-        private static List<byte> _totalBuffer = new List<byte>();
+        private TCPController()
+        {
+            ReceiveTransmissionAsync();
+        }
 
-        public static void RunClient()
+        public void RunClient()
         {
             IsReading = false;
             _client = new TcpClient();
@@ -33,7 +41,7 @@ namespace TI_CS_Chatapp.Controller
             Console.WriteLine("TCPController: Connection active");
         }
 
-        public static void StopClient()
+        public void StopClient()
         {
             if (_client == null) return;
             _client.Close();
@@ -43,7 +51,7 @@ namespace TI_CS_Chatapp.Controller
 
 
 
-        public async static void SendAsync(String data)
+        public async void SendAsync(String data)
         {
             if (_client == null)
                 return;
@@ -54,7 +62,7 @@ namespace TI_CS_Chatapp.Controller
 
         }
 
-        public async static void ReceiveTransmissionAsync()
+        public async void ReceiveTransmissionAsync()
         {
             while (true)
             {
