@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Chatserver.Server
 {
-    internal class ClientHandler
+    internal class ClientHandler : IClientHandler
     {
         private readonly byte[] _buffer = new byte[1024];
         private const int BufferSize = 1024;
@@ -90,14 +90,14 @@ namespace Chatserver.Server
             }
         }
 
-        private void Send(String s)
+        public void Send(String s)
         {
             var dataArray = Packet.CreateByteData(s);
             _networkStream.Write(dataArray, 0, dataArray.Length);
             _networkStream.Flush();
         }
 
-        private void Send(Packet s)
+        public void Send(Packet s)
         {
             Send(s.ToString());
         }

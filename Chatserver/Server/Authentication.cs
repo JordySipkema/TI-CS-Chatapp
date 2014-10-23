@@ -7,12 +7,12 @@ using ChatShared;
 
 namespace Chatserver.Server
 {
-    public static class Authentication
+    static class Authentication
     {
         //ConcurrentDictionary to enhance thread safety.
-        private static readonly ConcurrentDictionary<User, Stream> AuthUsers = new ConcurrentDictionary<User, Stream>();
+        private static readonly ConcurrentDictionary<User, IClientHandler> AuthUsers = new ConcurrentDictionary<User, IClientHandler>();
 
-        public static Boolean Authenticate(String username, String passhash, Stream socketStream)
+        public static Boolean Authenticate(String username, String passhash, IClientHandler clientHandler)
         {
             //check that user and passhash are valid.
             //TODO: Create connection with database and check the the user is valid.    
@@ -35,7 +35,7 @@ namespace Chatserver.Server
             user.AuthToken = hash;
 
             //4. Add the user to the AuthUsers class.
-            AuthUsers.GetOrAdd(user, socketStream);
+            AuthUsers.GetOrAdd(user, clientHandler);
 
             return true;
         }
@@ -50,12 +50,12 @@ namespace Chatserver.Server
             var users = AuthUsers.Keys.Where(user => user.AuthToken == authToken);
             foreach (var user in users)
             {
-                Stream s;
+                IClientHandler s;
                 AuthUsers.TryRemove(user, out s);
             }
         }
 
-        public static Stream GetStream(String username)
+        public static IClientHandler GetStream(String username)
         {
             return AuthUsers.First(x => x.Key.Username == username).Value;
         }
@@ -75,7 +75,7 @@ namespace Chatserver.Server
     // Tijdelijk internal-class om errors te voorkomen
     // Zodra er een echte data-model is, wordt deze klasse verwijderd.
     // TODO: Remove the internal User class
-    public class User
+    internal class User
     {
         public String AuthToken = "ERROR: PLACEHOLDER FOR AUTHTOKEN";
         public String Username = "ERROR: PLACEHOLDER FOR USERNAME";
