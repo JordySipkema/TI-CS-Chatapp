@@ -72,7 +72,6 @@ namespace Chatserver.Server
                         continue;
 
                     JToken cmd;
-                    JToken authToken = null;
 
                     if (!json.TryGetValue("CMD", out cmd))
                     {
@@ -109,16 +108,15 @@ namespace Chatserver.Server
         {
             Console.WriteLine("Login packet recieved");
             //Recieve the username and password from json.
-            var username = json["username"].ToString();
-            var password = json["password"].ToString();
+            var packet = new LoginPacket(json);
 
             JObject returnJson;
             //Code to check User/pass here
-            if (Authentication.Authenticate(username, password, this))
+            if (Authentication.Authenticate(packet.Username, packet.Passhash, this))
             {
                 returnJson = new LoginResponsePacket(
                     Statuscode.Status.Ok,
-                    Authentication.GetUser(username).AuthToken
+                    Authentication.GetUser(packet.Username).AuthToken
                     );
 
             }
@@ -134,6 +132,10 @@ namespace Chatserver.Server
 
         private void HandleChatPacket(JObject json)
         {
+            Console.WriteLine("Handle Chat Packet");
+            var packet = new ChatPacket(json);
+
+            
             throw new NotImplementedException();
         }
 
