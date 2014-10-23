@@ -25,7 +25,7 @@ namespace Chatserver
         public void RunServer()
         {
             Console.WriteLine("ChatServer Status: Initializing");
-            var serverListener = new TcpListener(IPAddress.Any, AppProperties.PortNumber);
+            var serverListener = new TcpListener(IPAddress.Any, ChatShared.Properties.Settings.Default.PortNumber);
 
             //Code for getting server IP
             var serverip = Dns.GetHostEntry(Dns.GetHostName())

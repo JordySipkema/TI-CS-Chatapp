@@ -68,10 +68,9 @@ namespace TI_CS_Chatapp
         //get all settings stuff
         private void LoadSettings()
         {
-            tbServerPortNumber.Text = Convert.ToString(AppProperties.PortNumber);
-            
-            //WIP
-
+            tbServerPortNumber.Text = ChatShared.Properties.Settings.Default.PortNumber.ToString();
+            tbNickname.Text = Properties.Settings.Default.Nickname;
+            tbServerIP.Text = Properties.Settings.Default.ServerIP;
             //Code for getting server IP
             var clientIP = Dns.GetHostEntry(Dns.GetHostName())
                 .AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork)
@@ -81,8 +80,9 @@ namespace TI_CS_Chatapp
 
         private void SaveAll()
         {
-            //WIP
-
+            Properties.Settings.Default.Nickname = tbNickname.Text;
+            Properties.Settings.Default.ServerIP = tbServerIP.Text;
+            Properties.Settings.Default.Save();
             //on the end
             changedFlag = false;
         }
@@ -100,29 +100,5 @@ namespace TI_CS_Chatapp
             
         }
 
-    }
-
-    static class FileController
-    {
-
-        public static void LoadFile()
-        {
-
-
-        }
-
-        public void SaveFile()
-        {
-
-
-        }
-
-    }
-
-    [Serializable]
-    class ClientProperties
-    {
-        public string nickname { get; set; }
-        public string ServerIP { get; set; }
     }
 }
