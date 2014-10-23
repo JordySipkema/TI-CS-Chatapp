@@ -11,7 +11,7 @@ namespace TI_CS_Chatapp.Controller
     public class TCPController
     {
         private static TCPController _instance;
-        public TCPController Instance
+        public static TCPController Instance
         {
             get { return _instance ?? (_instance = new TCPController()); }
         }
@@ -26,14 +26,22 @@ namespace TI_CS_Chatapp.Controller
 
         private TCPController()
         {
-            ReceiveTransmissionAsync();
+            //ReceiveTransmissionAsync();
         }
 
         public void RunClient()
         {
+            if (Properties.Settings.Default.ServerIP.Length < 7)
+                throw new ArgumentNullException("ServerIP", "ServerIP is not set or invalid");
+
+            RunClient(IPAddress.Parse(Properties.Settings.Default.ServerIP));
+        }
+
+        public void RunClient(IPAddress IP)
+        {
             IsReading = false;
             _client = new TcpClient();
-            _client.Connect(new IPAddress(new byte[]{127,0,0,1}), ChatShared.Properties.Settings.Default.PortNumber);
+            _client.Connect(IP, ChatShared.Properties.Settings.Default.PortNumber);
 
             _totalBuffer = new List<byte>();
 

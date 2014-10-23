@@ -13,6 +13,7 @@ namespace TI_CS_Chatapp
         {
             InitializeComponent();
             Global = global;
+            Global.LoginResultEvent += HandleLoginStatus;
         }
 
         // ** begin of events ** //
@@ -77,14 +78,29 @@ namespace TI_CS_Chatapp
 
         public void Login(string username, string password, bool rememberPassword)
         {
-            loginscreenUC1.Visible = false;
-            ucChatSession.Visible = true;
-            ucContacts.Visible = true;
-            bool successful = Global.LoginToServer(username, password);
+            Global.LoginToServer(username, password);
             Global.SetRememberPassword(rememberPassword);
-            if (successful)
+        }
+
+        public void HandleLoginStatus(string status)
+        {
+            if (status == "200") // OK
             {
                 LoadContactsIntoListBox();
+                loginscreenUC1.Visible = false;
+                ucChatSession.Visible = true;
+                ucContacts.Visible = true;
+
+            }
+            else if (status == "430") // Invalid Username or Password
+            {
+                MessageBox.Show("Invalid Username or Password", "Error", MessageBoxButtons.OK);
+                Console.WriteLine(status);
+            }
+            else
+            {
+                MessageBox.Show("Unhandled error occured", "Error", MessageBoxButtons.OK);
+                Console.WriteLine(status);
             }
         }
 

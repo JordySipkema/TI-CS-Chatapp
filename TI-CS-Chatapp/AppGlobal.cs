@@ -1,15 +1,26 @@
 ﻿using ChatShared.Entity;
 using System.Collections.Generic;
 using System.Linq;
+using TI_CS_Chatapp.Controller;
+using ChatShared.Packet;
+using ChatShared.Packet.Request;
+using ChatShared.Packet.Response;
+using ChatShared;
+using ChatShared.Utilities;
 
 namespace TI_CS_Chatapp
 {
     public class AppGlobal
     {
         private readonly List<User> Users;
+        private readonly TCPController Controller;
 
-        public AppGlobal () {
-            
+        public delegate void LoginResultDelegate(string status);
+        public event LoginResultDelegate LoginResultEvent;
+
+        public AppGlobal()
+        {
+            Controller = TCPController.Instance;
             //debug
             Users = new List<User>
             {
@@ -17,15 +28,40 @@ namespace TI_CS_Chatapp
                 new User("Bart", "bart", "456"),
                 new User("Klaas", "klaas", "789")
             };
+            Controller.OnPacketReceived += PacketReceived;
         }
+
+
+        
         //return true if succeed
-        public bool LoginToServer(string username, string password)
+        public void LoginToServer(string username, string password)
         {
             /* ***WIP***
              * hier komt de login code voor het verbinding maken met de server enzovoort.
             */
+            Controller.RunClient();
+            var passhash = Crypto.CreateSHA256(password);
+            Properties.Settings.Default.Password = passhash;
+            var packet = new LoginPacket(username, passhash);
 
-            return true;
+            Controller.SendAsync(packet);
+            Controller.ReceiveTransmissionAsync();
+            
+        }
+
+        private void OnLoginResultEvent(string status)
+        {
+            LoginResultDelegate handler = LoginResultEvent;
+            if (handler != null) handler(status);
+        }
+
+        void PacketReceived(Packet p)
+        {
+            if (p is LoginResponsePacket)
+            {
+                var packet = p as LoginResponsePacket;
+                OnLoginResultEvent(packet.Status);
+            }
         }
 
         public void SetRememberPassword(bool remember)
@@ -35,13 +71,15 @@ namespace TI_CS_Chatapp
 
         public List<string> InitializeContacts()
         {
+
             /* ***WIP*** 
-             * ik haal hieronder de informatie over het netwerk op van de server OF vanuit de cache
-             * // Users = Connection.GetUsers();
+             * //ik haal hieronder de informatie over het netwerk op van de server OF vanuit de cache
+             * Users.Clear(); //important !!!
+             * Users = Connection.GetUsers();
             */
-            
+
             return Users.Select(user => user.Nickname).ToList();
-            
+
             /* Zo kan het ook:
             var x = from user in Users
                     select user.Nickname;
@@ -50,7 +88,7 @@ namespace TI_CS_Chatapp
         }
 
         // hij zou zn chat in cache moeten opslaan, WIP
-        public void Exiting() 
+        public void Exiting()
         {
             Properties.Settings.Default.Save();
         }
