@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppProperties.cs" />
-    <Compile Include="Enitity\User.cs" />
+    <Compile Include="Entity\User.cs" />
     <Compile Include="Entity\ChatMessage.cs" />
     <Compile Include="Packet\Packet.cs" />
     <Compile Include="Packet\Request\AuthenticatedPacket.cs" />

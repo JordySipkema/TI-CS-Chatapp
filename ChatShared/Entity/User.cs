@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatShared.Enitity
+namespace ChatShared.Entity
 {
     public class User
     {
