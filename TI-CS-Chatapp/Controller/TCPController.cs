@@ -2,31 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
 using ChatShared.Packet;
 
 namespace TI_CS_Chatapp.Controller
 {
-    // State object for receiving data from remote device.
-    public class StateObject
-    {
-        // Size of receive buffer.
-        public const int BufferSize = 256;
-        // Receive buffer.
-        public byte[] buffer = new byte[BufferSize];
-
-        // Received data string.
-        public StringBuilder sb = new StringBuilder();
-
-
-
-    }
-
     // ReSharper disable once InconsistentNaming
     public class TCPController
     {
