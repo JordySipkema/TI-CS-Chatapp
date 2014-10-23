@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using Chatserver.FileController;
+using ChatShared.Entity;
 using ChatShared.Packet;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
@@ -36,7 +37,8 @@ namespace Chatserver.Server
 
         private void ThreadLoop()
         {
-            while (true)
+            var AbortRequested = _thread.ThreadState.HasFlag(ThreadState.AbortRequested);
+            while (!AbortRequested)
             {
                 try
                 {
@@ -56,7 +58,7 @@ namespace Chatserver.Server
                     if (packetSize == -1)
                         continue;
 
-                    //Retrieve the Json out of the recieved packet.
+                    //Retrieve the Json out of the received packet.
                     JObject json = null;
                     try
                     {
@@ -87,6 +89,12 @@ namespace Chatserver.Server
                         case LoginPacket.DefCmd:
                             HandleLoginPacket(json);
                             break;
+                        case DisconnectPacket.DefCmd:
+                            HandleDisconnectPacket(json);
+                            break;
+                        case RegisterPacket.DefCmd:
+                            HandleRegisterPacket(json);
+                            break;
                     }
 
                 }
@@ -105,9 +113,37 @@ namespace Chatserver.Server
             Console.WriteLine("ClientThread stopped");
         }
 
+        private void HandleRegisterPacket(JObject json)
+        {
+            Console.WriteLine("RegisterPacket Received");
+
+            var packet = new RegisterPacket(json);
+            var user = new User(packet.Nickname, packet.Username, packet.Passhash);
+            Datastorage.Instance.AddUser(user);
+
+            var returnPacket = new ResponsePacket(Statuscode.Status.Ok);
+            Send(returnPacket);
+        }
+
+        private void HandleDisconnectPacket(JObject json)
+        {
+            Console.WriteLine("DisconnectPacket Received");
+
+            var packet = new DisconnectPacket(json);
+
+            var returnPacket = new ResponsePacket(Statuscode.Status.Unauthorized);
+            if (Authentication.Authenticate(packet.AuthToken))
+            {
+                Authentication.ReleaseAuthToken(packet.AuthToken);
+                returnPacket = new ResponsePacket(Statuscode.Status.Ok);
+            }
+
+            Send(returnPacket);
+        }
+
         private void HandleLoginPacket(JObject json)
         {
-            Console.WriteLine("Login packet recieved");
+            Console.WriteLine("Login packet received");
             //Recieve the username and password from json.
             var packet = new LoginPacket(json);
 
