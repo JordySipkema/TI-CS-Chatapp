@@ -100,11 +100,29 @@ namespace TI_CS_Chatapp
             
         }
 
-        
+    }
 
-        
+    static class FileController
+    {
 
-        
+        public static void LoadFile()
+        {
 
+
+        }
+
+        public void SaveFile()
+        {
+
+
+        }
+
+    }
+
+    [Serializable]
+    class ClientProperties
+    {
+        public string nickname { get; set; }
+        public string ServerIP { get; set; }
     }
 }
