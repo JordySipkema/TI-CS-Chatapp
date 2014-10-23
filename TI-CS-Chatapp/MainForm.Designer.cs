@@ -40,6 +40,7 @@
             this.viewLoginScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewContactScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewChatScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ucChatSession = new TI_CS_Chatapp.UserControls.ChatSessionUC();
             this.ucContacts = new TI_CS_Chatapp.ContactsUserControl();
             this.loginscreenUC1 = new TI_CS_Chatapp.UserControls.LoginscreenUC();
@@ -49,6 +50,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.registerToolStripMenuItem,
             this.logoutToolStripMenuItem,
             this.loginLogoutToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -81,7 +83,7 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
@@ -142,6 +144,13 @@
             this.viewChatScreenToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.viewChatScreenToolStripMenuItem.Text = "View chat screen";
             this.viewChatScreenToolStripMenuItem.Click += new System.EventHandler(this.viewChatScreenToolStripMenuItem_Click);
+            // 
+            // registerToolStripMenuItem
+            // 
+            this.registerToolStripMenuItem.Name = "registerToolStripMenuItem";
+            this.registerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.registerToolStripMenuItem.Text = "Register";
+            this.registerToolStripMenuItem.Click += new System.EventHandler(this.registerToolStripMenuItem_Click);
             // 
             // ucChatSession
             // 
@@ -207,6 +216,7 @@
         private System.Windows.Forms.ToolStripMenuItem viewLoginScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewContactScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewChatScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem registerToolStripMenuItem;
 
     }
 }

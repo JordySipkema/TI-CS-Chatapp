@@ -7,6 +7,7 @@ using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
 using ChatShared;
 using ChatShared.Utilities;
+using System.Threading;
 
 namespace TI_CS_Chatapp
 {
@@ -15,8 +16,9 @@ namespace TI_CS_Chatapp
         private readonly List<User> Users;
         private readonly TCPController Controller;
 
-        public delegate void LoginResultDelegate(string status);
-        public event LoginResultDelegate LoginResultEvent;
+        public delegate void ResultDelegate(string status);
+        public event ResultDelegate LoginResultEvent;
+        public static event ResultDelegate RegisterResultEvent;
 
         public AppGlobal()
         {
@@ -49,9 +51,20 @@ namespace TI_CS_Chatapp
             
         }
 
+        public void LogoutFromServer()
+        {
+            
+
+        }
         private void OnLoginResultEvent(string status)
         {
-            LoginResultDelegate handler = LoginResultEvent;
+            ResultDelegate handler = LoginResultEvent;
+            if (handler != null) handler(status);
+        }
+
+        private void OnRegisterResultEvent(string status)
+        {
+            ResultDelegate handler = RegisterResultEvent;
             if (handler != null) handler(status);
         }
 
@@ -61,6 +74,12 @@ namespace TI_CS_Chatapp
             {
                 var packet = p as LoginResponsePacket;
                 OnLoginResultEvent(packet.Status);
+            }
+            if (p is RegisterResponsePacket)
+            {
+                var packet = p as ResponsePacket;
+                OnRegisterResultEvent(packet.Status);
+
             }
         }
 

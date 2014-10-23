@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TI_CS_Chatapp.Subforms;
 
 namespace TI_CS_Chatapp
 {
@@ -68,6 +69,12 @@ namespace TI_CS_Chatapp
         {
 
         }
+
+        private void registerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new RegisterForm().Show();
+            
+        }  
         
         // ** end of events ** //
 
@@ -86,21 +93,23 @@ namespace TI_CS_Chatapp
         {
             if (status == "200") // OK
             {
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((new Action(() => HandleLoginStatus(status))));
+                    return;
+                }
                 LoadContactsIntoListBox();
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;
                 ucContacts.Visible = true;
-
             }
             else if (status == "430") // Invalid Username or Password
             {
                 MessageBox.Show("Invalid Username or Password", "Error", MessageBoxButtons.OK);
-                Console.WriteLine(status);
             }
             else
             {
                 MessageBox.Show("Unhandled error occured", "Error", MessageBoxButtons.OK);
-                Console.WriteLine(status);
             }
         }
 
@@ -110,6 +119,7 @@ namespace TI_CS_Chatapp
             ucChatSession.Visible = false;
             ucContacts.Visible = false;
             loginscreenUC1.Visible = true;
+            Global.LogoutFromServer();
         }
 
         public void ExitApp()
@@ -117,7 +127,9 @@ namespace TI_CS_Chatapp
             Logout();
             Global.Exiting();
             Application.Exit();
-        }        
+        }
+
+              
         
     }
 }
