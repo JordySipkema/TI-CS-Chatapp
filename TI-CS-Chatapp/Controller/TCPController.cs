@@ -18,6 +18,7 @@ namespace TI_CS_Chatapp.Controller
 
         private TcpClient _client;
         public Boolean Busy { get; private set; }
+        public Boolean IsConnected { get; private set; }
         public delegate void ReceivedPacket(Packet p);
         public event ReceivedPacket OnPacketReceived;
 
@@ -39,9 +40,12 @@ namespace TI_CS_Chatapp.Controller
 
         public void RunClient(IPAddress IP)
         {
+            if (IsConnected) return;
+
             IsReading = false;
             _client = new TcpClient();
             _client.Connect(IP, ChatShared.Properties.Settings.Default.PortNumber);
+            IsConnected = true;
 
             _totalBuffer = new List<byte>();
 
@@ -51,6 +55,8 @@ namespace TI_CS_Chatapp.Controller
 
         public void StopClient()
         {
+            IsConnected = false;
+
             if (_client == null) return;
             _client.Close();
             _client = null;
@@ -72,7 +78,7 @@ namespace TI_CS_Chatapp.Controller
 
         public async void ReceiveTransmissionAsync()
         {
-            while (true)
+            while (IsConnected)
             {
                 var buffer = new byte[1024];
                 var bytesRead = await _client.GetStream().ReadAsync(buffer, 0, buffer.Length);
