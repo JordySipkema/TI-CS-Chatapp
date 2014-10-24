@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChatShared.Entity;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet.Response
@@ -17,15 +19,21 @@ namespace ChatShared.Packet.Response
         public DataType PDataType { get; private set; }
         public IEnumerable<T> Data { get; private set; }
 
-        public PullResponsePacket(Statuscode.Status status, DataType dataType) : base(status, DefCmd)
+        public PullResponsePacket(Statuscode.Status status, DataType dataType, IEnumerable<T> dataEnumerable)
+            : base(status, DefCmd)
         {
+            Initialize(dataType, dataEnumerable);
         }
 
-        public PullResponsePacket(string status, string description, DataType dataType) : base(status, description, DefCmd)
+        public PullResponsePacket(string status, string description,
+            DataType dataType, IEnumerable<T> dataEnumerable)
+            : base(status, description, DefCmd)
         {
+            Initialize(dataType, dataEnumerable);
         }
 
-        public PullResponsePacket(JObject json) : base(json)
+        public PullResponsePacket(JObject json)
+            : base(json)
         {
             if (json == null)
                 throw new ArgumentNullException("json", "PullResponsePacket ctor: json is null!");
@@ -42,16 +50,32 @@ namespace ChatShared.Packet.Response
             if (!Enum.IsDefined(typeof(DataType), dataType))
                 throw new ArgumentException("DataType is found, but is invalid in json: \n" + json);
 
-            var data = dataToken.Children().Values<T>();
+            if (!(dataType == DataType.User && (typeof(T) == typeof(User)) ||
+               dataType == DataType.ChatMessage && (typeof(T) == typeof(ChatMessage))))
+                throw new ArgumentException(String.Format("DataType ({0}) and TypeParameter ({1}) are not in sync", 
+                    dataType, typeof(T)));
 
+            var data = dataToken.Children().Values<T>();
             Initialize(dataType, data);
         }
 
-        private void Initialize(DataType dataType, IEnumerable<T> dataEnumerable )
+        private void Initialize(DataType dataType, IEnumerable<T> dataEnumerable)
         {
             PDataType = dataType;
             Data = dataEnumerable;
         }
 
+        public override JObject ToJsonObject()
+        {
+            var json = base.ToJsonObject();
+            json.Add("DATATYPE", PDataType.ToString());
+            json.Add("DATA", JArray.FromObject(Data));
+            return json;
+        }
+
+        public override string ToString()
+        {
+            return ToJsonObject().ToString();
+        }
     }
 }
