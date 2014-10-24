@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -249,8 +248,23 @@ namespace Chatserver.Server
             Console.WriteLine("Handle Chat Packet");
             var packet = new ChatPacket(json);
 
+            var usernameSender = Authentication.GetAllUsers()
+                .Where(user => user.AuthToken == packet.AuthToken)
+                .Select(user => user.Username).FirstOrDefault();
 
-            throw new NotImplementedException();
+            var chatMessage = new ChatMessage(usernameSender,
+                packet.UsernameDestination,
+                packet.Message,
+                packet.Sent);
+
+            _datastorage.AddMessage(chatMessage);
+
+            var returnJson = new ChatResponsePacket(Statuscode.Status.Ok);
+
+#if DEBUG
+            Console.WriteLine(packet);
+            Console.WriteLine(returnJson);
+#endif
         }
 
         public void Send(String s)

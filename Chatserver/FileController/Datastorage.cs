@@ -70,5 +70,10 @@ namespace Chatserver.FileController
             _users.Add(user);
             return true;
         }
+
+        public void AddMessage(ChatMessage message)
+        {
+            _messages.Add(message);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting;
 using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet.Request
@@ -6,12 +7,13 @@ namespace ChatShared.Packet.Request
     public class ChatPacket : AuthenticatedPacket
     {
         //Inherited fields: CMD, AUTHTOKEN
-        //Introduced fields: Message, UsernameDestination
+        //Introduced fields: Message, UsernameDestination, Sent (datetime)
 
         public const string DefCmd = "CHAT";
 
         public String Message { get; private set; }
         public String UsernameDestination { get; private set; }
+        public DateTime Sent { get; private set; }
 
         public ChatPacket(JObject json) : base(json)
         {
@@ -20,12 +22,14 @@ namespace ChatShared.Packet.Request
 
             JToken message;
             JToken usernameDestination;
+            JToken sent;
 
             if (!(json.TryGetValue("message", StringComparison.CurrentCultureIgnoreCase, out message)
-                && json.TryGetValue("UsernameDestination", StringComparison.CurrentCultureIgnoreCase, out usernameDestination)))
+                && json.TryGetValue("UsernameDestination", StringComparison.CurrentCultureIgnoreCase, out usernameDestination)
+                && json.TryGetValue("Sent", StringComparison.CurrentCultureIgnoreCase, out sent)))
                 throw new ArgumentException("Message or UsernameDestination is not found in json: \n" + json);
 
-            Initialize((string)message, (string)usernameDestination);
+            Initialize((string)message, (string)usernameDestination, (DateTime)sent);
         }
 
         public ChatPacket(string message, string usernameDestination, string authtoken)
@@ -36,8 +40,14 @@ namespace ChatShared.Packet.Request
 
         private void Initialize(string message, string usernameDestination)
         {
+            Initialize(message,usernameDestination,DateTime.Now);
+        }
+
+        private void Initialize(string message, string usernameDestination, DateTime sent)
+        {
             Message = message;
             UsernameDestination = usernameDestination;
+            Sent = sent;
         }
 
         public override JObject ToJsonObject()
@@ -45,6 +55,7 @@ namespace ChatShared.Packet.Request
             var json = base.ToJsonObject();
             json.Add("Message", Message);
             json.Add("UsernameDestination", UsernameDestination);
+            json.Add("Sent", Sent);
             return base.ToJsonObject();
         }
 
