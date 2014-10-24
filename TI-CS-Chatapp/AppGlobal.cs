@@ -9,18 +9,20 @@ using ChatShared;
 using ChatShared.Utilities;
 using System.Threading;
 using System;
+using TI_CS_Chatapp.UserControls;
 
 namespace TI_CS_Chatapp
 {
     public class AppGlobal
     {
         public static List<User> Users { get; private set; }
+        public static List<ChatMessage> ChatMessages { get; private set; }
+
+        public static User SelectedUser { get; private set; }
 
         public string AuthToken;
         //depricated
         //public static string SelectedContact { get; set; }
-
-        public static List<ChatMessage> ChatMessages { get; private set; }
 
         private readonly TCPController Controller;
 
@@ -30,7 +32,7 @@ namespace TI_CS_Chatapp
         public event ResultDelegate ResultEvent;
         public delegate void ContactDelegate(User user);
         public static event ContactDelegate OnlineStatusOfContactEvent;
-        public delegate void MessageDelegate(ChatMessage message);
+        public delegate void MessageDelegate(ChatMessage message, bool contactChanged);
         public static event MessageDelegate IncomingMessageEvent;
 
 
@@ -55,9 +57,9 @@ namespace TI_CS_Chatapp
             };
 
             Controller.OnPacketReceived += PacketReceived;
+            AppGlobal.IncomingMessageEvent += HandleIncomingChatMessageEvent;
+            ChatSessionUC.OutgoingMessageEvent += HandleOutgoingChatMessageEvent;
         }
-
-
         
         //return true if succeed
         public void LoginToServer(string username, string password)
@@ -148,10 +150,10 @@ namespace TI_CS_Chatapp
             var username = Users.Where(user => SelectedContact.Contains(user.Nickname)).Select(user => user.Username).FirstOrDefault();
             if (username == null)
                 return;
-            
+            AppGlobal.SelectedUser = Users.Where(user => username == user.Username).ToList().FirstOrDefault();
             foreach (ChatMessage message in GetMessages(username))
             {
-                OnIncomingMessageEvent(message);
+                IncomingMessageEvent(message, true);
             }
         }
 
@@ -175,8 +177,10 @@ namespace TI_CS_Chatapp
         private void OnIncomingMessageEvent(ChatMessage message)
         {
             MessageDelegate handler = IncomingMessageEvent;
-            if (handler != null) handler(message);
+            if (handler != null) handler(message, true);
         }
+
+
 
         public IEnumerable<ChatMessage> GetMessages(string username)
         {
@@ -219,6 +223,21 @@ namespace TI_CS_Chatapp
         private void FillChatMessageList(List<ChatMessage> list)
         {
             ChatMessages = new List<ChatMessage>(list);
+        }
+
+        private void HandleIncomingChatMessageEvent(ChatMessage message, bool contactChanged)
+        {
+            if (!contactChanged)
+                ChatMessages.Add(message);
+        }
+
+        private void HandleOutgoingChatMessageEvent(ChatMessage message)
+        {
+            Controller.RunClient();
+            var packet = new ChatPacket(message, AuthToken);
+            Controller.SendAsync(packet);
+            Controller.ReceiveTransmissionAsync();
+            IncomingMessageEvent(message, false);
         }
 
         public void Exiting()
