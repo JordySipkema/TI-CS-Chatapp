@@ -15,7 +15,8 @@ namespace TI_CS_Chatapp
     public class AppGlobal
     {
         public static List<User> Users { get; private set; }
-        
+
+        public string AuthToken;
         //depricated
         //public static string SelectedContact { get; set; }
 
@@ -29,8 +30,6 @@ namespace TI_CS_Chatapp
         public event ResultDelegate ResultEvent;
         public delegate void ContactDelegate(User user);
         public static event ContactDelegate OnlineStatusOfContactEvent;
-        public delegate void SelectedContactDelegate(string SelectedContact);
-        public static event SelectedContactDelegate SelectedContactEvent;
         public delegate void MessageDelegate(ChatMessage message);
         public static event MessageDelegate IncomingMessageEvent;
 
@@ -68,6 +67,7 @@ namespace TI_CS_Chatapp
             */
             Controller.RunClient();
             var passhash = Crypto.CreateSHA256(password);
+            Properties.Settings.Default.Username = username;
             Properties.Settings.Default.Password = passhash;
             var packet = new LoginPacket(username, passhash);
 
@@ -87,6 +87,9 @@ namespace TI_CS_Chatapp
             if (p is LoginResponsePacket)
             {
                 var packet = p as LoginResponsePacket;
+                AuthToken = packet.AuthToken;
+                Console.WriteLine("We are logged in!");
+                Console.WriteLine("authtoken: " + AuthToken);
                 OnLoginResultEvent(packet.Status);
             }
             else if (p is RegisterResponsePacket)
@@ -94,7 +97,13 @@ namespace TI_CS_Chatapp
                 var packet = p as RegisterResponsePacket;
                 OnRegisterResultEvent(packet.Status);
             }
-            else if (p is ResponsePacket)
+            else if (p is PullResponsePacket<ChatMessage>)
+            {
+                var packet = p as PullResponsePacket<ChatMessage>;
+                FillChatMessageList(packet.Data.ToList());
+                Console.WriteLine("PullResponsePacket received!");
+            }
+            else if (p is ResponsePacket) //this one should be last!
             {
                 var packet = p as ResponsePacket;
                 OnResultEvent(packet);
@@ -163,13 +172,6 @@ namespace TI_CS_Chatapp
             if (handler != null) handler(user);
         }
 
-        // hij zou zn chat in cache moeten opslaan, WIP
-
-        public void InitializeMessages()
-        {
-            
-        }
-
         private void OnIncomingMessageEvent(ChatMessage message)
         {
             MessageDelegate handler = IncomingMessageEvent;
@@ -206,15 +208,24 @@ namespace TI_CS_Chatapp
             return x;
         }
 
-        public IEnumerable<ChatMessage> GetAllMessagesFromServerOrSomething()
+        public void GetAllMessagesFromServer()
         {
-            throw new NotImplementedException();
-            //not yet implemented
+            Controller.RunClient();
+            var packet = new PullRequestPacket(PullRequestPacket.RequestType.MessagesByUser, Properties.Settings.Default.Username, AuthToken);
+            Controller.SendAsync(packet);
+            Controller.ReceiveTransmissionAsync();
+        }
+
+        private void FillChatMessageList(List<ChatMessage> list)
+        {
+            ChatMessages = new List<ChatMessage>(list);
         }
 
         public void Exiting()
         {
             Properties.Settings.Default.Save();
+
+            // hij zou zn chat in cache moeten opslaan, WIP
         }
 
     }

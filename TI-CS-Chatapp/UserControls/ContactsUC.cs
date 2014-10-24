@@ -72,6 +72,8 @@ namespace TI_CS_Chatapp
         {
             // depricated
             // AppGlobal.SelectedContact = lboxContacts.SelectedItem.ToString();
+            if (lboxContacts.SelectedItem == null) 
+                return;
             MainForm MyForm = (MainForm)this.Parent;
             MyForm.ClearChatHistory();
             OnSelectedContactEvent(lboxContacts.SelectedItem.ToString());

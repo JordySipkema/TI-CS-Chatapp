@@ -102,7 +102,7 @@ namespace TI_CS_Chatapp
                 }
 
                 Global.InitializeContacts();
-                Global.InitializeMessages();
+                Global.GetAllMessagesFromServer();
 
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;
