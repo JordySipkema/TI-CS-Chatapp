@@ -17,6 +17,10 @@ namespace TI_CS_Chatapp
         private const string _online = " (online)";
         private const string _offline = " (offline)";
 
+        public delegate void SelectedContactDelegate(string SelectedContact);
+        public static event SelectedContactDelegate SelectedContactEvent;
+        
+
         public ContactsUserControl()
         {
             InitializeComponent();
@@ -41,13 +45,8 @@ namespace TI_CS_Chatapp
                 _userDict.Add(username, onlinestatus);
             }
             */
-            var nicknames =
-                from nn in AppGlobal.Users
-                orderby nn.Nickname
-                select String.Format("{0} {1}", nn.Nickname, boolToOnline(nn.OnlineStatus));
-
             RemoveContactsFromListBox();
-            LoadContacts(nicknames.ToList());
+            LoadContacts(AppGlobal.Users);
         }
 
 
@@ -56,19 +55,33 @@ namespace TI_CS_Chatapp
             return online ? _online : _offline;
         }
 
-        public void LoadContacts(List<string> nicknames)
+        public void LoadContacts(List<User> nicknames)
         {
-            nicknames.Sort();
-            foreach (string s in nicknames)
+            foreach (User u in nicknames)
             {
-                lboxContacts.Items.Add(s);
+                lboxContacts.Items.Add(u);
             }
-
         }
 
         public void RemoveContactsFromListBox()
         {
             lboxContacts.Items.Clear();
+        }
+
+        private void lboxContacts_SelectedValueChanged(object sender, EventArgs e)
+        {
+            // depricated
+            // AppGlobal.SelectedContact = lboxContacts.SelectedItem.ToString();
+            MainForm MyForm = (MainForm)this.Parent;
+            MyForm.ClearChatHistory();
+            OnSelectedContactEvent(lboxContacts.SelectedItem.ToString());
+            
+        }
+
+        private void OnSelectedContactEvent(string contact)
+        {
+            SelectedContactDelegate handler = SelectedContactEvent;
+            if (handler != null) handler(contact);
         }
     }
 }

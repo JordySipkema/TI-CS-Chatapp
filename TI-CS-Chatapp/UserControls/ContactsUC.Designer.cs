@@ -41,6 +41,7 @@
             this.lboxContacts.Name = "lboxContacts";
             this.lboxContacts.Size = new System.Drawing.Size(175, 574);
             this.lboxContacts.TabIndex = 0;
+            this.lboxContacts.SelectedValueChanged += new System.EventHandler(this.lboxContacts_SelectedValueChanged);
             // 
             // label1
             // 

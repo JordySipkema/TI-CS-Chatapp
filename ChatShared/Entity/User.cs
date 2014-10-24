@@ -35,7 +35,7 @@ namespace ChatShared.Entity
 
         public override string ToString()
         {
-            return String.Format("{0} ({1})", Nickname, OnlineStatus ? "Online" : " Offline");
+            return String.Format("{0} ({1})", Nickname, OnlineStatus ? "Online" : "Offline");
         }
     }
 }

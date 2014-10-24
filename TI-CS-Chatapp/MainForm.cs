@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChatShared.Entity;
+using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using TI_CS_Chatapp.Subforms;
@@ -79,7 +80,7 @@ namespace TI_CS_Chatapp
         
         // ** end of events ** //
 
-        public void LoadContactsIntoListBox(List<string> nicknames)
+        public void LoadContactsIntoListBox(List<User> nicknames)
         {
             ucContacts.LoadContacts(nicknames);
         }
@@ -101,6 +102,7 @@ namespace TI_CS_Chatapp
                 }
 
                 Global.InitializeContacts();
+                Global.InitializeMessages();
 
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;
@@ -114,6 +116,11 @@ namespace TI_CS_Chatapp
             {
                 MessageBox.Show("Unhandled error occured", "Error", MessageBoxButtons.OK);
             }
+        }
+
+        public void ClearChatHistory()
+        {
+            ucChatSession.ClearHistory();
         }
 
         public void Logout()
