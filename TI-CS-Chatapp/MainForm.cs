@@ -100,7 +100,7 @@ namespace TI_CS_Chatapp
                     return;
                 }
 
-                LoadContactsIntoListBox(Global.GetAllNicknames());
+                Global.InitializeContacts();
 
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;

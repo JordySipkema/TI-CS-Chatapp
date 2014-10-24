@@ -24,6 +24,15 @@ namespace TI_CS_Chatapp.UserControls
             MyForm.Login(tbUsername.Text, tbPassword.Text, chkPassword.CheckState.HasFlag(CheckState.Checked));
         }
 
+        private void tbPassword_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                lblSignin_Click(sender, new EventArgs());
+
+            }
+        }
+
 
     }
 }

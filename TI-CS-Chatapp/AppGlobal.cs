@@ -104,19 +104,13 @@ namespace TI_CS_Chatapp
 
         public void InitializeContacts()
         {
-            /* ***WIP*** 
-             * //ik haal hieronder de informatie over het netwerk op van de server OF vanuit de cache
-             * Users.Clear(); //important !!!
-             * Users = Connection.GetUsers();
-            */
-
-            // GetAllNicknames();
             foreach (User user in Users)
             {
                 OnlineStatusOfContactEventChanged(user);
             }
         }
 
+        //depricated
         public List<string> GetAllNicknames()
         {
             return Users.Select(user => user.Nickname).ToList();
