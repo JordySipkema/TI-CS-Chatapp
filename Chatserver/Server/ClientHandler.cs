@@ -118,30 +118,31 @@ namespace Chatserver.Server
             Console.WriteLine("PullRequestPacket Received");
             var packet = new PullRequestPacket(json);
 
-            Packet returnPacket;
-
-            switch (packet.Request)
+            var returnPacket = new ResponsePacket(Statuscode.Status.Unauthorized);
+            if (Authentication.Authenticate(packet.AuthToken))
             {
-                case PullRequestPacket.RequestType.UsersByStatus:
-                    returnPacket = HandlePullRequestUsersByStatus();
-                    break;
-                case PullRequestPacket.RequestType.ReceivedMessages:
-                    returnPacket = HandlePullRequestReceivedMessages(packet);
-                    break;
-                case PullRequestPacket.RequestType.MessagesByUser:
-                    returnPacket = HandlePullRequestMessagesByUser(packet);
-                    break;
-                default:
-                    returnPacket = new ResponsePacket(Statuscode.Status.CommandNotImplemented,
-                        PullResponsePacket<object>.DefCmd);
-                    break;
+                switch (packet.Request)
+                {
+                    case PullRequestPacket.RequestType.UsersByStatus:
+                        returnPacket = HandlePullRequestUsersByStatus();
+                        break;
+                    case PullRequestPacket.RequestType.ReceivedMessages:
+                        returnPacket = HandlePullRequestReceivedMessages(packet);
+                        break;
+                    case PullRequestPacket.RequestType.MessagesByUser:
+                        returnPacket = HandlePullRequestMessagesByUser(packet);
+                        break;
+                    default:
+                        returnPacket = new ResponsePacket(Statuscode.Status.CommandNotImplemented,
+                            PullResponsePacket<object>.DefCmd);
+                        break;
+                }
             }
-
 #if DEBUG
             Console.WriteLine(packet);
             Console.WriteLine(returnPacket);
 #endif
-
+            Send(returnPacket);
         }
 
         private ResponsePacket HandlePullRequestMessagesByUser(PullRequestPacket packet)
@@ -248,23 +249,28 @@ namespace Chatserver.Server
             Console.WriteLine("Handle Chat Packet");
             var packet = new ChatPacket(json);
 
-            var usernameSender = Authentication.GetAllUsers()
-                .Where(user => user.AuthToken == packet.AuthToken)
-                .Select(user => user.Username).FirstOrDefault();
+            var returnPacket = new ChatResponsePacket(Statuscode.Status.Unauthorized);
 
-            var chatMessage = new ChatMessage(usernameSender,
-                packet.UsernameDestination,
-                packet.Message,
-                packet.Sent);
+            if (Authentication.Authenticate(packet.AuthToken))
+            {
+                var usernameSender = Authentication.GetAllUsers()
+                    .Where(user => user.AuthToken == packet.AuthToken)
+                    .Select(user => user.Username).FirstOrDefault();
 
-            _datastorage.AddMessage(chatMessage);
+                var chatMessage = new ChatMessage(usernameSender,
+                    packet.UsernameDestination,
+                    packet.Message,
+                    packet.Sent);
 
-            var returnJson = new ChatResponsePacket(Statuscode.Status.Ok);
+                _datastorage.AddMessage(chatMessage);
 
+                returnPacket = new ChatResponsePacket(Statuscode.Status.Ok);
+            }
 #if DEBUG
             Console.WriteLine(packet);
-            Console.WriteLine(returnJson);
+            Console.WriteLine(returnPacket);
 #endif
+            Send(returnPacket);
         }
 
         public void Send(String s)
