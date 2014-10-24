@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ChatShared.Entity;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
 using Newtonsoft.Json.Linq;
+using PullResponsePacket = ChatShared.Packet.Response.PullResponsePacket<ChatShared.Entity.User>;
+using PullResponseEnum = ChatShared.Packet.Response.PullResponsePacket<ChatShared.Entity.User>.DataType;
 
 namespace ChatShared.Packet
 {
@@ -83,6 +86,18 @@ namespace ChatShared.Packet
                     break;
                 case DisconnectPacket.DefCmd:
                     p = new DisconnectPacket(json);
+                    break;
+                case PullResponsePacket.DefCmd:
+                    switch ((PullResponseEnum)Enum.Parse(typeof(PullResponseEnum), 
+                        (string)json.GetValue("DataType", StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        case PullResponseEnum.User:
+                            p = new PullResponsePacket<User>(json);
+                            break;
+                        case PullResponseEnum.ChatMessage:
+                            p = new PullResponsePacket<ChatMessage>(json);
+                            break;
+                    }
                     break;
                 default:
                     try
