@@ -31,9 +31,11 @@ namespace ChatShared.Entity
 
         public void ChangePassword()
         {
-
-
         }
 
+        public override string ToString()
+        {
+            return String.Format("{0} ({1})", Nickname, OnlineStatus ? "Online" : " Offline");
+        }
     }
 }
