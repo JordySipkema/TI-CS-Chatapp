@@ -8,12 +8,15 @@ using ChatShared.Packet.Response;
 using ChatShared;
 using ChatShared.Utilities;
 using System.Threading;
+using System;
 
 namespace TI_CS_Chatapp
 {
     public class AppGlobal
     {
         public static List<User> Users { get; private set; }
+        public static List<ChatMessage> ChatMessages { get; private set; }
+
         private readonly TCPController Controller;
 
         public delegate void ResultDelegate(string status);
@@ -33,6 +36,16 @@ namespace TI_CS_Chatapp
                 new User("Bart", "bart", "456"),
                 new User("Klaas", "klaas", "789")
             };
+
+            ChatMessages = new List<ChatMessage>
+            {
+                new ChatMessage("jordy", "bart", "hallo bart", DateTime.Now),
+                new ChatMessage("bart", "jordy", "hallo jordy", DateTime.Now),
+                new ChatMessage("jordy", "bart", "hoe is het?", DateTime.Now),
+                new ChatMessage("bart", "jordy", "goed!", DateTime.Now),
+                new ChatMessage("jordy", "bart", "fijn!", DateTime.Now),
+            };
+
             Controller.OnPacketReceived += PacketReceived;
         }
 
