@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -94,6 +95,9 @@ namespace Chatserver.Server
                         case RegisterPacket.DefCmd:
                             HandleRegisterPacket(json);
                             break;
+                        case PullRequestPacket.DefCmd:
+                            HandlePullRequestPacket(json);
+                            break;
                     }
 
                 }
@@ -108,6 +112,69 @@ namespace Chatserver.Server
                     Console.WriteLine(e.Message);
                 }
             }
+        }
+
+        private void HandlePullRequestPacket(JObject json)
+        {
+            Console.WriteLine("PullRequestPacket Received");
+            var packet = new PullRequestPacket(json);
+
+            Packet returnPacket;
+
+            switch (packet.Request)
+            {
+                case PullRequestPacket.RequestType.UsersByStatus:
+                    returnPacket = HandlePullRequestUsersByStatus();
+                    break;
+                case PullRequestPacket.RequestType.ReceivedMessages:
+                    returnPacket = HandlePullRequestReceivedMessages(packet);
+                    break;
+                case PullRequestPacket.RequestType.MessagesByUser:
+                    returnPacket = HandlePullRequestMessagesByUser(packet);
+                    break;
+                default:
+                    returnPacket = new ResponsePacket(Statuscode.Status.CommandNotImplemented,
+                        PullResponsePacket<object>.DefCmd);
+                    break;
+            }
+
+#if DEBUG
+            Console.WriteLine(packet);
+            Console.WriteLine(returnPacket);
+#endif
+
+        }
+
+        private ResponsePacket HandlePullRequestMessagesByUser(PullRequestPacket packet)
+        {
+            var allMessages = _datastorage.GetMessages(packet.SearchKey);
+            return new PullResponsePacket<ChatMessage>(Statuscode.Status.Ok,
+                PullResponsePacket<ChatMessage>.DataType.ChatMessage,
+                allMessages);
+        }
+
+        private ResponsePacket HandlePullRequestReceivedMessages(PullRequestPacket packet)
+        {
+            var allMessages = _datastorage.GetMessagesSentTo(packet.SearchKey);
+            return new PullResponsePacket<ChatMessage>(Statuscode.Status.Ok,
+                PullResponsePacket<ChatMessage>.DataType.ChatMessage,
+                allMessages);
+
+        }
+
+        private ResponsePacket HandlePullRequestUsersByStatus()
+        {
+            //Get all users and set their online-status to "false".
+            var allUsers = _datastorage.GetUsers().ToList();
+            var authenticatedUsers = Authentication.GetAllUsers();
+            foreach (var user in allUsers)
+            {
+                user.OnlineStatus = authenticatedUsers.Contains(user);
+            }
+
+            return new PullResponsePacket<User>(Statuscode.Status.Ok, 
+                PullResponsePacket<User>.DataType.User,
+                allUsers);
         }
 
         private void HandleRegisterPacket(JObject json)
@@ -182,7 +249,7 @@ namespace Chatserver.Server
             Console.WriteLine("Handle Chat Packet");
             var packet = new ChatPacket(json);
 
-            
+
             throw new NotImplementedException();
         }
 

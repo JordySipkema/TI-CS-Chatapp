@@ -13,7 +13,7 @@ namespace ChatShared.Entity
         public string Password { get; private set; }
         public string AuthToken { get; set; }
 
-        public bool OnlineStatus { get; private set; }
+        public bool OnlineStatus { get; set; }
 
         public List<ChatMessage> Messages { get; set; }
 

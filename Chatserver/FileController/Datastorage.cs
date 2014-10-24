@@ -29,6 +29,11 @@ namespace Chatserver.FileController
             return _users.FirstOrDefault(user => user.Username == username);
         }
 
+        public IEnumerable<User> GetUsers()
+        {
+            return _users;
+        } 
+
         public IEnumerable<ChatMessage> GetMessages(string username)
         {
             var x =
