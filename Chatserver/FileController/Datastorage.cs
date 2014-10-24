@@ -39,6 +39,26 @@ namespace Chatserver.FileController
 
             return x;
         }
+        public IEnumerable<ChatMessage> GetMessagesSentTo(string username)
+        {
+            var x =
+                from message in _messages
+                where message.Recipient == username
+                orderby message.Timestamp ascending
+                select message;
+
+            return x;
+        }
+        public IEnumerable<ChatMessage> GetMessagesFrom(string username)
+        {
+            var x =
+                from message in _messages
+                where message.Sender == username
+                orderby message.Timestamp ascending
+                select message;
+
+            return x;
+        }
 
         public bool AddUser(User user)
         {
