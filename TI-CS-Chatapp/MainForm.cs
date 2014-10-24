@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using TI_CS_Chatapp.Subforms;
 
@@ -78,9 +79,9 @@ namespace TI_CS_Chatapp
         
         // ** end of events ** //
 
-        private void LoadContactsIntoListBox()
+        public void LoadContactsIntoListBox(List<string> nicknames)
         {
-            ucContacts.LoadContacts(Global.InitializeContacts());
+            ucContacts.LoadContacts(nicknames);
         }
 
         public void Login(string username, string password, bool rememberPassword)
@@ -98,7 +99,9 @@ namespace TI_CS_Chatapp
                     this.Invoke((new Action(() => HandleLoginStatus(status))));
                     return;
                 }
-                LoadContactsIntoListBox();
+
+                LoadContactsIntoListBox(Global.GetAllNicknames());
+
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;
                 ucContacts.Visible = true;

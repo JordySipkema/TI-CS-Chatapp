@@ -13,13 +13,15 @@ namespace TI_CS_Chatapp
 {
     public class AppGlobal
     {
-        private readonly List<User> Users;
+        public static List<User> Users { get; private set; }
         private readonly TCPController Controller;
 
         public delegate void ResultDelegate(string status);
         public event ResultDelegate LoginResultEvent;
         public static event ResultDelegate RegisterResultEvent;
         public event ResultDelegate ResultEvent;
+        public delegate void ContactDelegate(User user);
+        public static event ContactDelegate OnlineStatusOfContactEvent;
 
         public AppGlobal()
         {
@@ -100,22 +102,35 @@ namespace TI_CS_Chatapp
             Properties.Settings.Default.RememberPassword = remember;
         }
 
-        public List<string> InitializeContacts()
+        public void InitializeContacts()
         {
-
             /* ***WIP*** 
              * //ik haal hieronder de informatie over het netwerk op van de server OF vanuit de cache
              * Users.Clear(); //important !!!
              * Users = Connection.GetUsers();
             */
 
-            return Users.Select(user => user.Nickname).ToList();
+            // GetAllNicknames();
+            foreach (User user in Users)
+            {
+                OnlineStatusOfContactEventChanged(user);
+            }
+        }
 
+        public List<string> GetAllNicknames()
+        {
+            return Users.Select(user => user.Nickname).ToList();
             /* Zo kan het ook:
             var x = from user in Users
                     select user.Nickname;
             return x.ToList();
              */
+        }
+
+        private void OnlineStatusOfContactEventChanged(User user)
+        {
+            ContactDelegate handler = OnlineStatusOfContactEvent;
+            if (handler != null) handler(user);
         }
 
         // hij zou zn chat in cache moeten opslaan, WIP
