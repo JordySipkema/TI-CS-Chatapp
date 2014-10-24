@@ -90,14 +90,14 @@ namespace ChatShared.Packet
                 case PullResponsePacket.DefCmd:
                     switch ((PullResponseEnum)Enum.Parse(typeof(PullResponseEnum), 
                         (string)json.GetValue("DataType", StringComparison.CurrentCultureIgnoreCase)))
-                    {
+                    { // Start inner switch
                         case PullResponseEnum.User:
                             p = new PullResponsePacket<User>(json);
                             break;
                         case PullResponseEnum.ChatMessage:
                             p = new PullResponsePacket<ChatMessage>(json);
                             break;
-                    }
+                    } //End inner switch
                     break;
                 default:
                     try

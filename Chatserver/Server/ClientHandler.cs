@@ -80,7 +80,7 @@ namespace Chatserver.Server
                         continue;
                     }
 
-                    switch ((string)cmd)
+                    switch ((string) cmd)
                     {
                         case ChatPacket.DefCmd:
                             HandleChatPacket(json);
@@ -100,15 +100,24 @@ namespace Chatserver.Server
                     }
 
                 }
+                catch (SocketException)
+                {
+                    Console.WriteLine("Client with IP-address: {0} has been disconnected",
+                        _tcpclient.Client.RemoteEndPoint);
+                    _thread.Abort();
+                }
                 catch (Exception e)
                 {
                     if (e.InnerException is SocketException)
                     {
                         Console.WriteLine("Client with IP-address: {0} has been disconnected",
                             _tcpclient.Client.RemoteEndPoint);
-                        _thread.Interrupt();
+                        _thread.Abort();
                     }
-                    Console.WriteLine(e.Message);
+                    else
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
         }
