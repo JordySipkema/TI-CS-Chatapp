@@ -15,6 +15,10 @@ namespace TI_CS_Chatapp
     public class AppGlobal
     {
         public static List<User> Users { get; private set; }
+        
+        //depricated
+        //public static string SelectedContact { get; set; }
+
         public static List<ChatMessage> ChatMessages { get; private set; }
 
         private readonly TCPController Controller;
@@ -25,6 +29,11 @@ namespace TI_CS_Chatapp
         public event ResultDelegate ResultEvent;
         public delegate void ContactDelegate(User user);
         public static event ContactDelegate OnlineStatusOfContactEvent;
+        public delegate void SelectedContactDelegate(string SelectedContact);
+        public static event SelectedContactDelegate SelectedContactEvent;
+        public delegate void MessageDelegate(ChatMessage message);
+        public static event MessageDelegate IncomingMessageEvent;
+
 
         public AppGlobal()
         {
@@ -117,9 +126,23 @@ namespace TI_CS_Chatapp
 
         public void InitializeContacts()
         {
+            ContactsUserControl.SelectedContactEvent += SelectedContactChanged;
             foreach (User user in Users)
             {
                 OnlineStatusOfContactEventChanged(user);
+            }
+            
+        }
+
+        private void SelectedContactChanged(string SelectedContact)
+        {
+            var username = Users.Where(user => SelectedContact.Contains(user.Nickname)).Select(user => user.Username).FirstOrDefault();
+            if (username == null)
+                return;
+            
+            foreach (ChatMessage message in GetMessages(username))
+            {
+                OnIncomingMessageEvent(message);
             }
         }
 
@@ -141,6 +164,54 @@ namespace TI_CS_Chatapp
         }
 
         // hij zou zn chat in cache moeten opslaan, WIP
+
+        public void InitializeMessages()
+        {
+            
+        }
+
+        private void OnIncomingMessageEvent(ChatMessage message)
+        {
+            MessageDelegate handler = IncomingMessageEvent;
+            if (handler != null) handler(message);
+        }
+
+        public IEnumerable<ChatMessage> GetMessages(string username)
+        {
+            var x =
+                from message in ChatMessages
+                where message.Recipient == username || message.Sender == username
+                orderby message.Timestamp ascending
+                select message;
+
+            return x;
+        }
+        public IEnumerable<ChatMessage> GetMessagesSentTo(string username)
+        {
+            var x =
+                from message in ChatMessages
+                where message.Recipient == username
+                orderby message.Timestamp ascending
+                select message;
+
+            return x;
+        }
+        public IEnumerable<ChatMessage> GetMessagesFrom(string username)
+        {
+            var x =
+                from message in ChatMessages
+                where message.Sender == username
+                orderby message.Timestamp ascending
+                select message;
+            return x;
+        }
+
+        public IEnumerable<ChatMessage> GetAllMessagesFromServerOrSomething()
+        {
+            throw new NotImplementedException();
+            //not yet implemented
+        }
+
         public void Exiting()
         {
             Properties.Settings.Default.Save();

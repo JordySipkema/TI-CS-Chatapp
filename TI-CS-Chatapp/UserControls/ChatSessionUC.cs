@@ -15,6 +15,30 @@ namespace TI_CS_Chatapp.UserControls
         public ChatSessionUC()
         {
             InitializeComponent();
+            AppGlobal.IncomingMessageEvent += HandleIncomingChatMessageEvent;
         }
+
+        private void HandleIncomingChatMessageEvent(ChatShared.Entity.ChatMessage message)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke((new Action(() => HandleIncomingChatMessageEvent(message))));
+                return;
+            }
+
+            tbMsgHistory.Text += (message.Timestamp.ToShortTimeString() + " " + message.Sender + ": " + message.Message + "\r\n");
+        }
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        public void ClearHistory()
+        {
+            tbMsgHistory.Text = "";
+        }
+
+
     }
 }
