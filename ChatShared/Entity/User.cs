@@ -5,13 +5,22 @@ namespace ChatShared.Entity
 {
     public class User
     {
-        public string Nickname { get; private set; }
+        public string Nickname { get; set; }
         public string Username { get; private set; }
         public string Password { get; private set; }
         public string AuthToken { get; set; }
 
         [JsonIgnore]
-        public bool OnlineStatus { get; set; }
+        private bool _onlineStatus;
+        [JsonIgnore]
+        public bool OnlineStatus
+        {
+            get { return _onlineStatus; }
+            set { 
+                OnOnlineStatusChanged();
+                _onlineStatus = value; 
+            }
+        }
 
         public User(string nickname, string username, string password)
         {
@@ -32,6 +41,13 @@ namespace ChatShared.Entity
         public override string ToString()
         {
             return String.Format("{0} ({1})", Nickname, OnlineStatus ? "Online" : "Offline");
+        }
+
+        public event EventHandler OnlineStatusChanged;
+        private void OnOnlineStatusChanged()
+        {
+            var handler = OnlineStatusChanged;
+            if (handler != null) handler(this, EventArgs.Empty);
         }
     }
 }

@@ -238,6 +238,11 @@ namespace Chatserver.Server
                     Statuscode.Status.Ok,
                     Authentication.GetUser(packet.Username).AuthToken
                     );
+                var u = _datastorage.GetUser(packet.Username);
+                if (u != null)
+                {
+                    u.OnlineStatus = true;
+                }
 
             }
             else //If the code reaches this point, the authentification has failed.

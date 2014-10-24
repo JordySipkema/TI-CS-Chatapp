@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ChatShared.Entity;
+using ChatShared.Packet.Push;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
 using Newtonsoft.Json.Linq;
@@ -67,16 +68,22 @@ namespace ChatShared.Packet
 
 
             Packet p = null;
-            switch ((string)json.GetValue("CMD", StringComparison.CurrentCultureIgnoreCase))
+            switch ((string) json.GetValue("CMD", StringComparison.CurrentCultureIgnoreCase))
             {
+                case ChatPacket.DefCmd:
+                    p = new ChatPacket(json);
+                    break;
+                case DisconnectPacket.DefCmd:
+                    p = new DisconnectPacket(json);
+                    break;
                 case LoginPacket.DefCmd:
                     p = new LoginPacket(json);
                     break;
                 case LoginResponsePacket.DefCmd:
                     p = new LoginResponsePacket(json);
                     break;
-                case ChatPacket.DefCmd:
-                    p = new ChatPacket(json);
+                case MessagePushPacket.DefCmd:
+                    p = new MessagePushPacket(json);
                     break;
                 case RegisterPacket.DefCmd:
                     p = new RegisterPacket(json);
@@ -84,12 +91,14 @@ namespace ChatShared.Packet
                 case RegisterResponsePacket.DefCmd:
                     p = new RegisterResponsePacket(json);
                     break;
-                case DisconnectPacket.DefCmd:
-                    p = new DisconnectPacket(json);
+                case UserChangedPacket.DefCmd:
+                    p = new UserChangedPacket(json);
                     break;
                 case PullResponsePacket.DefCmd:
-                    switch ((PullResponseEnum)Enum.Parse(typeof(PullResponseEnum), 
-                        (string)json.GetValue("DataType", StringComparison.CurrentCultureIgnoreCase)))
+                    switch ((PullResponseEnum) Enum.Parse(typeof (PullResponseEnum),
+                        (string)
+                            json.GetValue("DataType", StringComparison.CurrentCultureIgnoreCase))
+                        )
                     { // Start inner switch
                         case PullResponseEnum.User:
                             p = new PullResponsePacket<User>(json);
@@ -104,7 +113,9 @@ namespace ChatShared.Packet
                     {
                         p = new ResponsePacket(json);
                     }
-                    catch (ArgumentException) { }
+                    catch (ArgumentException)
+                    {
+                    }
                     break;
             }
             return p;

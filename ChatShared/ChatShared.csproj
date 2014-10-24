@@ -48,6 +48,7 @@
     <Compile Include="Entity\User.cs" />
     <Compile Include="Entity\ChatMessage.cs" />
     <Compile Include="Packet\Packet.cs" />
+    <Compile Include="Packet\Push\MessagePushPacket.cs" />
     <Compile Include="Packet\Push\PushPacket.cs" />
     <Compile Include="Packet\Request\AuthenticatedPacket.cs" />
     <Compile Include="Packet\Request\ChatPacket.cs" />

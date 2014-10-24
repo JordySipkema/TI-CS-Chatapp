@@ -56,7 +56,7 @@ namespace ChatShared.Packet.Request
             json.Add("Message", Message);
             json.Add("UsernameDestination", UsernameDestination);
             json.Add("Sent", Sent);
-            return base.ToJsonObject();
+            return json;
         }
 
         public override string ToString()

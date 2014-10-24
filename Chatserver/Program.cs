@@ -3,6 +3,9 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using ChatShared.Entity;
+using ChatShared.Packet;
+using ChatShared.Packet.Push;
 
 // ReSharper disable ObjectCreationAsStatement
 
