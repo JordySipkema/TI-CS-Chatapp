@@ -102,6 +102,7 @@ namespace TI_CS_Chatapp
             else if (p is PullResponsePacket<ChatMessage>)
             {
                 var packet = p as PullResponsePacket<ChatMessage>;
+                throw new Exception("ER ZIT EEN GROTE BUG IN HET PROJECT!!!!! (Zie AppGlobal.cs, 1 line na deze exception.)");
                 FillChatMessageList(packet.Data.ToList());
                 Console.WriteLine("PullResponsePacket received!");
             }
