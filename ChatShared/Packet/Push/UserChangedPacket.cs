@@ -28,6 +28,19 @@ namespace ChatShared.Packet.Push
 
         public UserChangedPacket(JObject json) : base(json)
         {
+            if (json == null)
+                throw new ArgumentNullException("json", "UserChangedpacket ctor: json is null!");
+
+            JToken usernameToken;
+            JToken nicknameToken;
+            JToken statusToken;
+
+            if (!(json.TryGetValue("username", StringComparison.CurrentCultureIgnoreCase, out usernameToken)
+                && json.TryGetValue("nickname", StringComparison.CurrentCultureIgnoreCase, out nicknameToken)
+                && json.TryGetValue("status", StringComparison.CurrentCultureIgnoreCase, out statusToken)))
+                throw new ArgumentException("Username, nickname and/or status is not found in json: \n" + json);
+
+            Initialize((string)usernameToken, (string)nicknameToken, (bool)statusToken);
         }
 
         private void Initialize(String username, string nickname, bool status)
@@ -39,7 +52,11 @@ namespace ChatShared.Packet.Push
 
         public override JObject ToJsonObject()
         {
-            return base.ToJsonObject();
+            var json = base.ToJsonObject();
+            json.Add("Username", Username);
+            json.Add("Nickname", Nickname);
+            json.Add("Status", Status);
+            return json;
         }
 
         public override string ToString()
