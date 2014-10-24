@@ -37,8 +37,7 @@ namespace Chatserver.Server
 
         private void ThreadLoop()
         {
-            var AbortRequested = _thread.ThreadState.HasFlag(ThreadState.AbortRequested);
-            while (!AbortRequested)
+            while (true)
             {
                 try
                 {
@@ -104,12 +103,11 @@ namespace Chatserver.Server
                     {
                         Console.WriteLine("Client with IP-address: {0} has been disconnected",
                             _tcpclient.Client.RemoteEndPoint);
-                        _thread.Abort();
+                        _thread.Interrupt();
                     }
                     Console.WriteLine(e.Message);
                 }
             }
-            Console.WriteLine("ClientThread stopped");
         }
 
         private void HandleRegisterPacket(JObject json)
