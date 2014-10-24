@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Remoting;
 using Newtonsoft.Json.Linq;
+using ChatShared.Entity;
 
 namespace ChatShared.Packet.Request
 {
@@ -36,6 +37,12 @@ namespace ChatShared.Packet.Request
             : base(DefCmd, authtoken)
         {
             Initialize(message, usernameDestination);
+        }
+
+        public ChatPacket(ChatMessage message, string authtoken)
+            : base(DefCmd, authtoken)
+        {
+            Initialize(message.Message, message.Recipient);
         }
 
         private void Initialize(string message, string usernameDestination)
