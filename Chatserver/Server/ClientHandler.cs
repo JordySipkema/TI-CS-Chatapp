@@ -243,16 +243,7 @@ namespace Chatserver.Server
                 if (user != null)
                 {
                     user.OnlineStatus = true;
-                    var userChangedPacket = new UserChangedPacket(user);
-                    foreach (var clientHandler in Authentication.GetAllUsers()
-                        .Select(linqUser => Authentication.GetStream(linqUser.Username))
-                        .Where(clientHandler => clientHandler != null))
-                    {
-#if DEBUG
-                        Console.WriteLine("Notify UserChanged");
-#endif
-                        clientHandler.Send(userChangedPacket);
-                    }
+                    SendToAllOnlineUsers(new UserChangedPacket(user));
                 }
 
             }
@@ -306,6 +297,20 @@ namespace Chatserver.Server
             Console.WriteLine(returnPacket);
 #endif
             Send(returnPacket);
+        }
+
+
+        private void SendToAllOnlineUsers(Packet p)
+        {
+            foreach (var clientHandler in Authentication.GetAllUsers()
+                .Select(linqUser => Authentication.GetStream(linqUser.Username))
+                .Where(clientHandler => clientHandler != null))
+            {
+#if DEBUG
+                Console.WriteLine("SendToAllUsers: Sending a packet");
+#endif
+                clientHandler.Send(p);
+            }
         }
 
         public void Send(String s)
