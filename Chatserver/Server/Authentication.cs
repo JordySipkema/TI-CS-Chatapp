@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Chatserver.FileController;
 using ChatShared.Entity;
 using ChatShared.Utilities;
@@ -38,6 +39,15 @@ namespace Chatserver.Server
 
             //3. Link the authtoken to the user
             user.AuthToken = hash;
+
+            //4. Remove the user if he was already in the list.
+            var linqQuery = AuthUsers.Where(u => u.Key.Username == user.Username).ToList();
+            foreach (var keyValuePair in linqQuery)
+            {
+                IClientHandler cHandler;
+                AuthUsers.TryRemove(keyValuePair.Key, out cHandler);
+
+            }
 
             //4. Add the user to the AuthUsers class.
             AuthUsers.GetOrAdd(user, clientHandler);

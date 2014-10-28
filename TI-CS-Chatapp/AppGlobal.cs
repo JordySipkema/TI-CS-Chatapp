@@ -1,6 +1,7 @@
 ﻿using ChatShared.Entity;
 using System.Collections.Generic;
 using System.Linq;
+using ChatShared.Properties;
 using TI_CS_Chatapp.Controller;
 using ChatShared.Packet;
 using ChatShared.Packet.Request;
@@ -22,8 +23,6 @@ namespace TI_CS_Chatapp
         public static User SelectedUser { get; private set; }
 
         public string AuthToken;
-        //depricated
-        //public static string SelectedContact { get; set; }
 
         private readonly TCPController Controller;
 
@@ -39,23 +38,8 @@ namespace TI_CS_Chatapp
 
         public AppGlobal()
         {
+            Users = new List<User>();
             Controller = TCPController.Instance;
-            //debug
-            Users = new List<User>
-            {
-                new User("Jordy", "jordy", "123"),
-                new User("Bart", "bart", "456"),
-                new User("Klaas", "klaas", "789")
-            };
-
-            ChatMessages = new List<ChatMessage>
-            {
-                new ChatMessage("jordy", "bart", "hallo bart", DateTime.Now),
-                new ChatMessage("bart", "jordy", "hallo jordy", DateTime.Now),
-                new ChatMessage("jordy", "bart", "hoe is het?", DateTime.Now),
-                new ChatMessage("bart", "jordy", "goed!", DateTime.Now),
-                new ChatMessage("jordy", "bart", "fijn!", DateTime.Now),
-            };
 
             Controller.OnPacketReceived += PacketReceived;
             AppGlobal.IncomingMessageEvent += HandleIncomingChatMessageEvent;
@@ -79,10 +63,12 @@ namespace TI_CS_Chatapp
             
         }
 
-        public void LogoutFromServer()
+        public async void LogoutFromServer()
         {
-            
+            if (AuthToken == null || AuthToken.Length <= 20) return;
 
+            var disconnectPacket = new DisconnectPacket(AuthToken);
+            await Controller.SendAsync(disconnectPacket);
         }
         
         void PacketReceived(Packet p)
