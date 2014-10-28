@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ChatShared.Entity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -55,7 +56,9 @@ namespace ChatShared.Packet.Response
                 throw new ArgumentException(String.Format("DataType ({0}) and TypeParameter ({1}) are not in sync", 
                     dataType, typeof(T)));
 
-            var data = dataToken.Children().Values<T>();
+
+            var array = (JArray)dataToken;
+            var data = array.Select(value => value.ToObject<T>()).ToList();
             Initialize(dataType, data);
         }
 
