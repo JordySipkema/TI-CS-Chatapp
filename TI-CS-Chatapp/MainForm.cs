@@ -11,12 +11,12 @@ namespace TI_CS_Chatapp
 
         // hoogte zonder menustrip en menubalk (-/+/x) is 700 - (24 + 39) = 637
         // user control width/height voor login screen: 484 en 629
-        private AppGlobal Global; 
+        private readonly AppGlobal _global; 
         public MainForm(AppGlobal global)
         {
             InitializeComponent();
-            Global = global;
-            Global.LoginResultEvent += HandleLoginStatus;
+            _global = global;
+            _global.LoginResultEvent += HandleLoginStatus;
         }
 
         // ** begin of events ** //
@@ -87,32 +87,31 @@ namespace TI_CS_Chatapp
 
         public void Login(string username, string password, bool rememberPassword)
         {
-            Global.LoginToServer(username, password);
-            Global.SetRememberPassword(rememberPassword);
+            _global.LoginToServer(username, password);
+            _global.SetRememberPassword(rememberPassword);
         }
 
         public void HandleLoginStatus(string status)
         {
-            if (status == "200") // OK
+            switch (status)
             {
-                if (this.InvokeRequired)
-                {
-                    this.Invoke((new Action(() => HandleLoginStatus(status))));
-                    return;
-                }
-                
-                Global.GetAllMessagesAndContactsFromServer();
-                loginscreenUC1.Visible = false;
-                ucChatSession.Visible = true;
-                ucContacts.Visible = true;
-            }
-            else if (status == "430") // Invalid Username or Password
-            {
-                MessageBox.Show("Invalid Username or Password", "Error", MessageBoxButtons.OK);
-            }
-            else
-            {
-                MessageBox.Show("Unhandled error occured", "Error", MessageBoxButtons.OK);
+                case "200":
+                    if (this.InvokeRequired)
+                    {
+                        this.Invoke((new Action(() => HandleLoginStatus(status))));
+                        return;
+                    }
+                    _global.GetAllMessagesAndContactsFromServer();
+                    loginscreenUC1.Visible = false;
+                    ucChatSession.Visible = true;
+                    ucContacts.Visible = true;
+                    break;
+                case "430":
+                    MessageBox.Show("Invalid Username or Password", "Error", MessageBoxButtons.OK);
+                    break;
+                default:
+                    MessageBox.Show("Unhandled error occured", "Error", MessageBoxButtons.OK);
+                    break;
             }
         }
 
@@ -127,13 +126,13 @@ namespace TI_CS_Chatapp
             ucChatSession.Visible = false;
             ucContacts.Visible = false;
             loginscreenUC1.Visible = true;
-            Global.LogoutFromServer();
+            _global.LogoutFromServer();
         }
 
         public void ExitApp()
         {
             Logout();
-            Global.Exiting();
+            _global.Exiting();
             Application.Exit();
         }
 

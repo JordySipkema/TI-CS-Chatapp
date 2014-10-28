@@ -121,6 +121,7 @@ namespace Chatserver.Server
                     }
                 }
             }
+// ReSharper disable once FunctionNeverReturns
         }
 
         private void HandlePullRequestPacket(JObject json)

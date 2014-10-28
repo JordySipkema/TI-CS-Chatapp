@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using ChatShared.Packet;
 
 namespace TI_CS_Chatapp.Controller
@@ -17,7 +18,6 @@ namespace TI_CS_Chatapp.Controller
         }
 
         private TcpClient _client;
-        public Boolean Busy { get; private set; }
         public Boolean IsConnected { get; private set; }
         public delegate void ReceivedPacket(Packet p);
         public event ReceivedPacket OnPacketReceived;
@@ -65,15 +65,13 @@ namespace TI_CS_Chatapp.Controller
 
 
 
-        public async void SendAsync(String data)
+        public async Task SendAsync(String data)
         {
             if (_client == null)
                 return;
-            Busy = true;
 
             var bytes = Packet.CreateByteData(data);
             await _client.GetStream().WriteAsync(bytes, 0, bytes.Length);
-
         }
 
         public async void ReceiveTransmissionAsync()
