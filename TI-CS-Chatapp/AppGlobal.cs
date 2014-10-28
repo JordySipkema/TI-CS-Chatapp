@@ -96,12 +96,35 @@ namespace TI_CS_Chatapp
                 var packet = p as UserChangedPacket;
                 if (packet.Username == Properties.Settings.Default.Username)
                     return;
-                var user = new User(packet.Nickname, packet.Username, null);
-         
-                user.OnlineStatus = packet.Status;
-                Users.Add(user);
-                Users = Users.Distinct().ToList();
-                OnlineStatusOfContactEventChanged(user);
+                User x = Users.FirstOrDefault(u => u.Username == packet.Username);
+                if (x == null)
+                {
+                    var user = new User(packet.Nickname, packet.Username, null);
+                    user.OnlineStatus = packet.Status;
+                    Users.Add(user);
+                    OnlineStatusOfContactEventChanged(user);
+                }
+                else
+                {
+                    x.OnlineStatus = packet.Status;
+                    OnlineStatusOfContactEventChanged(x);
+                }
+                
+
+                
+                
+                //Users = Users.Distinct().ToList();
+
+                //Explanation of Users.Where(): "select all people where there isn't another different person in the list with the same ID."
+                // Users = Users.Where(u => !Users.Any(q => (u != q && u.Username == q.Username))).ToList();
+
+                //Users = Users.Select(x => { x.OnlineStatus = packet.Status; return x; }).ToList();
+                
+                //Users.Find(u => u.OnlineStatus == packet.Status).OnlineStatus = packet.Status;
+                //if (x != null)
+                //{
+                //    x.OnlineStatus = packet.Status;
+                //}
             }
             else if (p is LoginResponsePacket)
             {
