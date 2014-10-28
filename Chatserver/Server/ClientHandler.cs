@@ -239,10 +239,20 @@ namespace Chatserver.Server
                     Statuscode.Status.Ok,
                     Authentication.GetUser(packet.Username).AuthToken
                     );
-                var u = _datastorage.GetUser(packet.Username);
-                if (u != null)
+                var user = _datastorage.GetUser(packet.Username);
+                if (user != null)
                 {
-                    u.OnlineStatus = true;
+                    user.OnlineStatus = true;
+                    var userChangedPacket = new UserChangedPacket(user);
+                    foreach (var clientHandler in Authentication.GetAllUsers()
+                        .Select(linqUser => Authentication.GetStream(linqUser.Username))
+                        .Where(clientHandler => clientHandler != null))
+                    {
+#if DEBUG
+                        Console.WriteLine("Notify UserChanged");
+#endif
+                        clientHandler.Send(userChangedPacket);
+                    }
                 }
 
             }
