@@ -98,7 +98,7 @@ namespace TI_CS_Chatapp
             {
                 var packet = p as UserChangedPacket;
                 var user = new User(packet.Nickname, packet.Username, null);
-                user.OnlineStatus = packet.Status();
+                user.OnlineStatus = packet.Status;
                 Users.Add(user);
                 OnlineStatusOfContactEventChanged(user);
             }
