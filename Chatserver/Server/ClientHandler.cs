@@ -6,6 +6,7 @@ using System.Threading;
 using Chatserver.FileController;
 using ChatShared.Entity;
 using ChatShared.Packet;
+using ChatShared.Packet.Push;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
 using Newtonsoft.Json;
@@ -80,7 +81,7 @@ namespace Chatserver.Server
                         continue;
                     }
 
-                    switch ((string) cmd)
+                    switch ((string)cmd)
                     {
                         case ChatPacket.DefCmd:
                             HandleChatPacket(json);
@@ -181,7 +182,7 @@ namespace Chatserver.Server
                 user.OnlineStatus = authenticatedUsers.Contains(user);
             }
 
-            return new PullResponsePacket<User>(Statuscode.Status.Ok, 
+            return new PullResponsePacket<User>(Statuscode.Status.Ok,
                 PullResponsePacket<User>.DataType.User,
                 allUsers);
         }
@@ -277,6 +278,16 @@ namespace Chatserver.Server
                     packet.Sent);
 
                 _datastorage.AddMessage(chatMessage);
+
+                //Generate ChatPushPacket
+                Packet pushPacket = new MessagePushPacket(chatMessage);
+
+                // Determining the socket to send the pushpacket
+                var clientHandler = Authentication.GetStream(packet.UsernameDestination);
+                if (clientHandler != null) clientHandler.Send(pushPacket);
+#if DEBUG
+                if (clientHandler != null) Console.WriteLine("Notifing:\n{0}", pushPacket);
+#endif
 
                 returnPacket = new ChatResponsePacket(Statuscode.Status.Ok);
             }
