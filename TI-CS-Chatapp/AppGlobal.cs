@@ -33,8 +33,9 @@ namespace TI_CS_Chatapp
         public event ResultDelegate ResultEvent;
         public delegate void ContactDelegate(User user);
         public static event ContactDelegate OnlineStatusOfContactEvent;
-        public delegate void MessageDelegate(ChatMessage message, bool contactChanged);
+        public delegate void MessageDelegate(ChatMessage message, bool selectedContactChanged);
         public static event MessageDelegate IncomingMessageEvent;
+        
 
 
         public AppGlobal()
@@ -43,9 +44,9 @@ namespace TI_CS_Chatapp
             //debug
             Users = new List<User>
             {
-                new User("Jordy", "jordy", "123"),
-                new User("Bart", "bart", "456"),
-                new User("Klaas", "klaas", "789")
+                //new User("Jordy", "jordy", "123"),
+                //new User("Bart", "bart", "456"),
+                //new User("Klaas", "klaas", "789")
             };
 
             ChatMessages = new List<ChatMessage>
@@ -93,7 +94,13 @@ namespace TI_CS_Chatapp
                 Console.WriteLine("push packet received!");
                 IncomingMessageEvent(packet.Message, false);
             }
-            
+            else if (p is UserChangedPacket)
+            {
+                var packet = p as UserChangedPacket;
+                var user = new User(packet.Nickname, packet.Username, null);
+                Users.Add(user);
+                OnlineStatusOfContactEventChanged(user);
+            }
             else if (p is LoginResponsePacket)
             {
                 var packet = p as LoginResponsePacket;
@@ -233,9 +240,9 @@ namespace TI_CS_Chatapp
             ChatMessages = new List<ChatMessage>(list);
         }
 
-        private void HandleIncomingChatMessageEvent(ChatMessage message, bool contactChanged)
+        private void HandleIncomingChatMessageEvent(ChatMessage message, bool selectedContactChanged)
         {
-            if (!contactChanged)
+            if (!selectedContactChanged)
                 ChatMessages.Add(message);
         }
 
