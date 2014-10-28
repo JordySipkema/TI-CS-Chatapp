@@ -100,10 +100,8 @@ namespace TI_CS_Chatapp
                     this.Invoke((new Action(() => HandleLoginStatus(status))));
                     return;
                 }
-
-                Global.InitializeContacts();
-                Global.GetAllMessagesFromServer();
-
+                
+                Global.GetAllMessagesAndContactsFromServer();
                 loginscreenUC1.Visible = false;
                 ucChatSession.Visible = true;
                 ucContacts.Visible = true;

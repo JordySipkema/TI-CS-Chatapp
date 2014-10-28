@@ -46,7 +46,8 @@ namespace TI_CS_Chatapp
             }
             */
             RemoveContactsFromListBox();
-            LoadContacts(AppGlobal.Users);
+            // Remove duplicates
+            LoadContacts(AppGlobal.Users.Where(x => x.Username != Properties.Settings.Default.Username).ToList());
         }
 
 

@@ -42,12 +42,7 @@ namespace TI_CS_Chatapp
         {
             Controller = TCPController.Instance;
             //debug
-            Users = new List<User>
-            {
-                //new User("Jordy", "jordy", "123"),
-                //new User("Bart", "bart", "456"),
-                //new User("Klaas", "klaas", "789")
-            };
+            Users = new List<User>();
 
             ChatMessages = new List<ChatMessage>
             {
@@ -97,9 +92,13 @@ namespace TI_CS_Chatapp
             else if (p is UserChangedPacket)
             {
                 var packet = p as UserChangedPacket;
+                if (packet.Username == Properties.Settings.Default.Username)
+                    return;
                 var user = new User(packet.Nickname, packet.Username, null);
+         
                 user.OnlineStatus = packet.Status;
                 Users.Add(user);
+                Users = Users.Distinct().ToList();
                 OnlineStatusOfContactEventChanged(user);
             }
             else if (p is LoginResponsePacket)
@@ -119,7 +118,15 @@ namespace TI_CS_Chatapp
             {
                 var packet = p as PullResponsePacket<ChatMessage>;
                 FillChatMessageList(packet.Data.ToList());
-                Console.WriteLine("PullResponsePacket received!");
+                Console.WriteLine("PullResponsePacket<ChatMessage> received!");
+            }
+            else if (p is PullResponsePacket<User>)
+            {
+                var packet = p as PullResponsePacket<User>;
+                foreach (User u in packet.Data.ToList()) {
+                    Users.Add(u);
+                }
+                InitializeContacts();
             }
             else if (p is ResponsePacket) //this one should be last!
             {
@@ -228,12 +235,16 @@ namespace TI_CS_Chatapp
             return x;
         }
 
-        public void GetAllMessagesFromServer()
+        public void GetAllMessagesAndContactsFromServer()
         {
             Controller.RunClient();
-            var packet = new PullRequestPacket(PullRequestPacket.RequestType.MessagesByUser, Properties.Settings.Default.Username, AuthToken);
-            Controller.SendAsync(packet);
+
+            var UBSpacket = new PullRequestPacket(PullRequestPacket.RequestType.UsersByStatus, AuthToken);
+            Controller.SendAsync(UBSpacket);
             Controller.ReceiveTransmissionAsync();
+            // the messagesByUser packet
+            var MBUpacket = new PullRequestPacket(PullRequestPacket.RequestType.MessagesByUser, Properties.Settings.Default.Username, AuthToken);
+            Controller.SendAsync(MBUpacket);
         }
 
         private void FillChatMessageList(List<ChatMessage> list)
