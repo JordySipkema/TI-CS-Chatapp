@@ -87,12 +87,13 @@ namespace TI_CS_Chatapp
         
         void PacketReceived(Packet p)
         {
-            if (p is PushPacket) 
+            if (p is MessagePushPacket) 
             {
                 var packet = p as MessagePushPacket;
                 Console.WriteLine("push packet received!");
                 IncomingMessageEvent(packet.Message, false);
             }
+            
             else if (p is LoginResponsePacket)
             {
                 var packet = p as LoginResponsePacket;
