@@ -20,6 +20,7 @@ namespace Chatserver.FileController
         {
             _users.Add(new User("Henk", "testuser01", Crypto.CreateSHA256("1234")));
             _users.Add(new User("Bart", "bart", Crypto.CreateSHA256("hoi")));
+            _users.Add(new User("Jordy", "jordy", Crypto.CreateSHA256("hoi")));
 
             // TODO: Create initializer code (fetching data from FileIO?)
         } 
