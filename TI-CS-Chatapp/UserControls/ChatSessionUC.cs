@@ -33,7 +33,6 @@ namespace TI_CS_Chatapp.UserControls
                 return;
             }
             tbMsgHistory.AppendText((message.Timestamp.ToShortTimeString() + " " + message.Sender + ": " + message.Message + "\r\n"));
-            //tbMsgHistory.Text += 
             
         }
 
