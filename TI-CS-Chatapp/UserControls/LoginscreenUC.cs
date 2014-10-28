@@ -21,7 +21,9 @@ namespace TI_CS_Chatapp.UserControls
         private void lblSignin_Click(object sender, EventArgs e)
         {
             MainForm MyForm = (MainForm)this.Parent;
+            tbPassword.Text = tbPassword.Text.Trim();
             MyForm.Login(tbUsername.Text, tbPassword.Text, chkPassword.CheckState.HasFlag(CheckState.Checked));
+            tbPassword.Clear();
         }
 
         private void tbPassword_KeyPress(object sender, KeyPressEventArgs e)

@@ -10,6 +10,7 @@ using ChatShared.Utilities;
 using System.Threading;
 using System;
 using TI_CS_Chatapp.UserControls;
+using ChatShared.Packet.Push;
 
 namespace TI_CS_Chatapp
 {
@@ -86,7 +87,13 @@ namespace TI_CS_Chatapp
         
         void PacketReceived(Packet p)
         {
-            if (p is LoginResponsePacket)
+            if (p is PushPacket) 
+            {
+                var packet = p as MessagePushPacket;
+                Console.WriteLine("push packet received!");
+                IncomingMessageEvent(packet.Message, false);
+            }
+            else if (p is LoginResponsePacket)
             {
                 var packet = p as LoginResponsePacket;
                 AuthToken = packet.AuthToken;

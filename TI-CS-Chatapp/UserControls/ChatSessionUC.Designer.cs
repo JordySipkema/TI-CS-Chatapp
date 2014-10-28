@@ -36,11 +36,14 @@
             // 
             // tbMessage
             // 
+            this.tbMessage.AllowDrop = true;
             this.tbMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbMessage.Location = new System.Drawing.Point(12, 594);
+            this.tbMessage.Multiline = true;
             this.tbMessage.Name = "tbMessage";
-            this.tbMessage.Size = new System.Drawing.Size(278, 21);
+            this.tbMessage.Size = new System.Drawing.Size(278, 20);
             this.tbMessage.TabIndex = 0;
+            this.tbMessage.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDownHandler);
             // 
             // btnSend
             // 
@@ -59,6 +62,7 @@
             this.tbMsgHistory.Multiline = true;
             this.tbMsgHistory.Name = "tbMsgHistory";
             this.tbMsgHistory.ReadOnly = true;
+            this.tbMsgHistory.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbMsgHistory.Size = new System.Drawing.Size(359, 538);
             this.tbMsgHistory.TabIndex = 2;
             // 

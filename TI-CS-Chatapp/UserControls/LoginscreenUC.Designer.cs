@@ -67,11 +67,13 @@
             // 
             // tbPassword
             // 
+            this.tbPassword.AcceptsReturn = true;
             this.tbPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tbPassword.Location = new System.Drawing.Point(197, 220);
+            this.tbPassword.Multiline = true;
             this.tbPassword.Name = "tbPassword";
             this.tbPassword.PasswordChar = '●';
-            this.tbPassword.Size = new System.Drawing.Size(164, 23);
+            this.tbPassword.Size = new System.Drawing.Size(164, 20);
             this.tbPassword.TabIndex = 3;
             this.tbPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbPassword_KeyPress);
             // 
