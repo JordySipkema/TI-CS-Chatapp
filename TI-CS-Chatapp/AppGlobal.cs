@@ -61,9 +61,6 @@ namespace TI_CS_Chatapp
         //return true if succeed
         public void LoginToServer(string username, string password)
         {
-            /* ***WIP***
-             * hier komt de login code voor het verbinding maken met de server enzovoort.
-            */
             Controller.RunClient();
             var passhash = Crypto.CreateSHA256(password);
             Properties.Settings.Default.Username = username;
@@ -72,7 +69,6 @@ namespace TI_CS_Chatapp
 
             Controller.SendAsync(packet);
             Controller.ReceiveTransmissionAsync();
-            
         }
 
         public async void LogoutFromServer()
@@ -81,6 +77,7 @@ namespace TI_CS_Chatapp
 
             var disconnectPacket = new DisconnectPacket(AuthToken);
             await Controller.SendAsync(disconnectPacket);
+            Users.Clear();
         }
         
         void PacketReceived(Packet p)
@@ -99,32 +96,11 @@ namespace TI_CS_Chatapp
                 User x = Users.FirstOrDefault(u => u.Username == packet.Username);
                 if (x == null)
                 {
-                    var user = new User(packet.Nickname, packet.Username, null);
-                    user.OnlineStatus = packet.Status;
-                    Users.Add(user);
-                    OnlineStatusOfContactEventChanged(user);
+                    x = new User(packet.Nickname, packet.Username, null);
+                    Users.Add(x);
                 }
-                else
-                {
-                    x.OnlineStatus = packet.Status;
-                    OnlineStatusOfContactEventChanged(x);
-                }
+                x.OnlineStatus = packet.Status;
                 
-
-                
-                
-                //Users = Users.Distinct().ToList();
-
-                //Explanation of Users.Where(): "select all people where there isn't another different person in the list with the same ID."
-                // Users = Users.Where(u => !Users.Any(q => (u != q && u.Username == q.Username))).ToList();
-
-                //Users = Users.Select(x => { x.OnlineStatus = packet.Status; return x; }).ToList();
-                
-                //Users.Find(u => u.OnlineStatus == packet.Status).OnlineStatus = packet.Status;
-                //if (x != null)
-                //{
-                //    x.OnlineStatus = packet.Status;
-                //}
             }
             else if (p is LoginResponsePacket)
             {
@@ -266,7 +242,7 @@ namespace TI_CS_Chatapp
 
             var UBSpacket = new PullRequestPacket(PullRequestPacket.RequestType.UsersByStatus, AuthToken);
             Controller.SendAsync(UBSpacket);
-            Controller.ReceiveTransmissionAsync();
+            // Controller.ReceiveTransmissionAsync(); //not needed?
             // the messagesByUser packet
             var MBUpacket = new PullRequestPacket(PullRequestPacket.RequestType.MessagesByUser, Properties.Settings.Default.Username, AuthToken);
             Controller.SendAsync(MBUpacket);
