@@ -100,6 +100,7 @@ namespace TI_CS_Chatapp
                     Users.Add(x);
                 }
                 x.OnlineStatus = packet.Status;
+                OnlineStatusOfContactEventChanged(x);
                 
             }
             else if (p is LoginResponsePacket)
