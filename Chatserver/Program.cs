@@ -20,6 +20,8 @@ namespace Chatserver
         public static void Main(string[] args)
         {
             new Program();
+            //stub method call so Datastorage will be initialized. 
+            Datastorage.Instance.GetHashCode();
             string userInput;
             userInput = Console.ReadLine();
             while (userInput != "exit")
@@ -37,6 +39,7 @@ namespace Chatserver
                 }
                 userInput = Console.ReadLine();
             }
+            Datastorage.Instance.SaveToFile();
             Environment.Exit(0);
         }
 
