@@ -6,6 +6,9 @@ using System.Net.Sockets;
 using ChatShared.Entity;
 using ChatShared.Packet;
 using ChatShared.Packet.Push;
+using System.Threading;
+using Chatserver.FileController;
+using Chatserver.Properties;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -13,14 +16,35 @@ namespace Chatserver
 {
     public class Program
     {
+        private readonly Thread _thread;
         public static void Main(string[] args)
         {
             new Program();
+            string userInput;
+            userInput = Console.ReadLine();
+            while (userInput != "exit")
+            {
+                switch(userInput)
+                {
+                    case "save":
+                        Datastorage.Instance.SaveToFile();
+                        break;
+                    case "exit":
+                        return;
+                    default:
+
+                        break;
+                }
+                userInput = Console.ReadLine();
+            }
+            Environment.Exit(0);
         }
 
         public Program()
         {
-            RunServer();
+            _thread = new Thread(RunServer);
+            _thread.Start();
+            //RunServer();
         }
 
         public void RunServer()

@@ -10,7 +10,6 @@ namespace ChatShared.Entity
         public string Password { get; private set; }
         public string AuthToken { get; set; }
 
-        [JsonIgnore]
         public bool OnlineStatus { get; set; }
 
         public User(string nickname, string username, string password)
