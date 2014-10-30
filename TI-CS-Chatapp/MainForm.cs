@@ -76,19 +76,6 @@ namespace TI_CS_Chatapp
         {
             new RegisterForm().Show();
             
-        }  
-        
-        // ** end of events ** //
-
-        public void LoadContactsIntoListBox(List<User> nicknames)
-        {
-            ucContacts.LoadContacts(nicknames);
-        }
-
-        public void Login(string username, string password, bool rememberPassword)
-        {
-            _global.LoginToServer(username, password);
-            _global.SetRememberPassword(rememberPassword);
         }
 
         public void HandleLoginStatus(string status)
@@ -114,6 +101,19 @@ namespace TI_CS_Chatapp
                     break;
             }
         }
+        
+        // ** end of events ** //
+
+        public void LoadContactsIntoListBox(List<User> nicknames)
+        {
+            ucContacts.LoadContacts(nicknames);
+        }
+
+        public void Login(string username, string password, bool rememberPassword)
+        {
+            _global.LoginToServer(username, password);
+            _global.SetRememberPassword(rememberPassword);
+        }
 
         public void ClearChatHistory()
         {
@@ -136,7 +136,5 @@ namespace TI_CS_Chatapp
             Application.Exit();
         }
 
-              
-        
     }
 }

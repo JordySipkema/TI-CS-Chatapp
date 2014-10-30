@@ -44,21 +44,12 @@ namespace TI_CS_Chatapp
             //debug
             Users = new List<User>();
 
-            ChatMessages = new List<ChatMessage>
-            {
-                new ChatMessage("jordy", "bart", "hallo bart", DateTime.Now),
-                new ChatMessage("bart", "jordy", "hallo jordy", DateTime.Now),
-                new ChatMessage("jordy", "bart", "hoe is het?", DateTime.Now),
-                new ChatMessage("bart", "jordy", "goed!", DateTime.Now),
-                new ChatMessage("jordy", "bart", "fijn!", DateTime.Now),
-            };
-
+            ChatMessages = new List<ChatMessage>();
             Controller.OnPacketReceived += PacketReceived;
             AppGlobal.IncomingMessageEvent += HandleIncomingChatMessageEvent;
             ChatSessionUC.OutgoingMessageEvent += HandleOutgoingChatMessageEvent;
         }
         
-        //return true if succeed
         public void LoginToServer(string username, string password)
         {
             Controller.RunClient();
@@ -137,6 +128,39 @@ namespace TI_CS_Chatapp
             }
         }
 
+        private void SelectedContactChanged(string SelectedContact)
+        {
+            var username = Users.Where(user => SelectedContact.Contains(user.Nickname)).Select(user => user.Username).FirstOrDefault();
+            if (username == null)
+                return;
+            AppGlobal.SelectedUser = Users.Where(user => username == user.Username).ToList().FirstOrDefault();
+            foreach (ChatMessage message in GetMessages(username))
+            {
+                IncomingMessageEvent(message, true);
+            }
+        }
+
+        public void SetRememberPassword(bool remember)
+        {
+            Properties.Settings.Default.RememberPassword = remember;
+        }
+
+        public void InitializeContacts()
+        {
+            ContactsUserControl.SelectedContactEvent += SelectedContactChanged;
+            foreach (User user in Users)
+            {
+                OnlineStatusOfContactEventChanged(user);
+            }
+            
+        }
+
+        private void OnlineStatusOfContactEventChanged(User user)
+        {
+            ContactDelegate handler = OnlineStatusOfContactEvent;
+            if (handler != null) handler(user);
+        }
+
         private void OnLoginResultEvent(string status)
         {
             ResultDelegate handler = LoginResultEvent;
@@ -155,56 +179,26 @@ namespace TI_CS_Chatapp
             if (handler != null) handler(packet);
         }
 
-        public void SetRememberPassword(bool remember)
-        {
-            Properties.Settings.Default.RememberPassword = remember;
-        }
-
-        public void InitializeContacts()
-        {
-            ContactsUserControl.SelectedContactEvent += SelectedContactChanged;
-            foreach (User user in Users)
-            {
-                OnlineStatusOfContactEventChanged(user);
-            }
-            
-        }
-
-        private void SelectedContactChanged(string SelectedContact)
-        {
-            var username = Users.Where(user => SelectedContact.Contains(user.Nickname)).Select(user => user.Username).FirstOrDefault();
-            if (username == null)
-                return;
-            AppGlobal.SelectedUser = Users.Where(user => username == user.Username).ToList().FirstOrDefault();
-            foreach (ChatMessage message in GetMessages(username))
-            {
-                IncomingMessageEvent(message, true);
-            }
-        }
-
-        //depricated
-        public List<string> GetAllNicknames()
-        {
-            return Users.Select(user => user.Nickname).ToList();
-            /* Zo kan het ook:
-            var x = from user in Users
-                    select user.Nickname;
-            return x.ToList();
-             */
-        }
-
-        private void OnlineStatusOfContactEventChanged(User user)
-        {
-            ContactDelegate handler = OnlineStatusOfContactEvent;
-            if (handler != null) handler(user);
-        }
-
         private void OnIncomingMessageEvent(ChatMessage message)
         {
             MessageDelegate handler = IncomingMessageEvent;
             if (handler != null) handler(message, true);
         }
 
+        private void HandleIncomingChatMessageEvent(ChatMessage message, bool selectedContactChanged)
+        {
+            if (!selectedContactChanged)
+                ChatMessages.Add(message);
+        }
+
+        private void HandleOutgoingChatMessageEvent(ChatMessage message)
+        {
+            Controller.RunClient();
+            var packet = new ChatPacket(message, AuthToken);
+            Controller.SendAsync(packet);
+            Controller.ReceiveTransmissionAsync();
+            IncomingMessageEvent(message, false);
+        }
 
 
         public IEnumerable<ChatMessage> GetMessages(string username)
@@ -254,20 +248,7 @@ namespace TI_CS_Chatapp
             ChatMessages = new List<ChatMessage>(list);
         }
 
-        private void HandleIncomingChatMessageEvent(ChatMessage message, bool selectedContactChanged)
-        {
-            if (!selectedContactChanged)
-                ChatMessages.Add(message);
-        }
-
-        private void HandleOutgoingChatMessageEvent(ChatMessage message)
-        {
-            Controller.RunClient();
-            var packet = new ChatPacket(message, AuthToken);
-            Controller.SendAsync(packet);
-            Controller.ReceiveTransmissionAsync();
-            IncomingMessageEvent(message, false);
-        }
+        
 
         public void Exiting()
         {
