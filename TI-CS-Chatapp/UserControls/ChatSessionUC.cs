@@ -17,6 +17,8 @@ namespace TI_CS_Chatapp.UserControls
         public delegate void MessageDelegate(ChatMessage message);
         public static event MessageDelegate OutgoingMessageEvent;
 
+        private bool _outgoingmsgFlag = false;
+
         public ChatSessionUC()
         {
             InitializeComponent();
@@ -25,15 +27,19 @@ namespace TI_CS_Chatapp.UserControls
             
         }
 
-        private void HandleIncomingChatMessageEvent(ChatShared.Entity.ChatMessage message, bool contactChanged)
+        private void HandleIncomingChatMessageEvent(ChatShared.Entity.ChatMessage message, bool contactChanged, User selectedUser)
         {
-            if (this.InvokeRequired)
+            if (selectedUser == null) return;
+            if (selectedUser.Nickname == message.Sender || _outgoingmsgFlag)
             {
-                this.Invoke((new Action(() => HandleIncomingChatMessageEvent(message, contactChanged))));
-                return;
+                if (this.InvokeRequired)
+                {
+                    this.Invoke((new Action(() => HandleIncomingChatMessageEvent(message, contactChanged, selectedUser))));
+                    return;
+                }
+                tbMsgHistory.AppendText((message.Timestamp.ToShortTimeString() + " " + message.Sender + ": " + message.Message + "\r\n"));
             }
-            tbMsgHistory.AppendText((message.Timestamp.ToShortTimeString() + " " + message.Sender + ": " + message.Message + "\r\n"));
-            
+            _outgoingmsgFlag = false;
         }
 
         private void OnOutgoingMessageEvent(ChatMessage message)
@@ -53,6 +59,7 @@ namespace TI_CS_Chatapp.UserControls
             if ((Properties.Settings.Default.Username == null) || (AppGlobal.SelectedUser.Username == null))
                 return;
             tbMessage.Text = tbMessage.Text.Trim();
+            _outgoingmsgFlag = true;
             OnOutgoingMessageEvent(new ChatMessage(Properties.Settings.Default.Username, AppGlobal.SelectedUser.Username, tbMessage.Text, DateTime.Now));
             tbMessage.Clear();
         }
@@ -64,7 +71,7 @@ namespace TI_CS_Chatapp.UserControls
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Return)
+            if (e.KeyCode == Keys.Return && AppGlobal.SelectedUser != null)
             {
                 SendMessage();
             }

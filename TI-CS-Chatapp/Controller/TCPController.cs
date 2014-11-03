@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using ChatShared.Packet;
+using System.IO;
 
 namespace TI_CS_Chatapp.Controller
 {
@@ -79,7 +80,18 @@ namespace TI_CS_Chatapp.Controller
             while (IsConnected)
             {
                 var buffer = new byte[1024];
-                var bytesRead = await _client.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                var bytesRead = 0;
+                try
+                {
+                    bytesRead = await _client.GetStream().ReadAsync(buffer, 0, buffer.Length);
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine("An exception occured in the TCPController.ReceiveTransmissionAsync function: " +
+                                          e.Message);
+
+                }
+                
                 if (bytesRead > 0)
                 {
                     try

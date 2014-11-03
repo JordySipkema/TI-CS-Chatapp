@@ -14,8 +14,13 @@ namespace TI_CS_Chatapp.UserControls
     {
         public LoginscreenUC()
         {
-            
             InitializeComponent();
+            if (Properties.Settings.Default.RememberPassword)
+            {
+                chkPassword.Checked = true;
+                tbUsername.Text = Properties.Settings.Default.Username;
+                tbPassword.Text = "******";
+            }
         }
 
         private void lblSignin_Click(object sender, EventArgs e)

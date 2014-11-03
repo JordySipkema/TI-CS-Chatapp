@@ -32,7 +32,7 @@ namespace TI_CS_Chatapp
         public event ResultDelegate ResultEvent;
         public delegate void ContactDelegate(User user);
         public static event ContactDelegate OnlineStatusOfContactEvent;
-        public delegate void MessageDelegate(ChatMessage message, bool selectedContactChanged);
+        public delegate void MessageDelegate(ChatMessage message, bool selectedContactChanged, User selectedContact);
         public static event MessageDelegate IncomingMessageEvent;
         
 
@@ -53,10 +53,15 @@ namespace TI_CS_Chatapp
         public void LoginToServer(string username, string password)
         {
             Controller.RunClient();
-            var passhash = Crypto.CreateSHA256(password);
+
             Properties.Settings.Default.Username = username;
-            Properties.Settings.Default.Password = passhash;
-            var packet = new LoginPacket(username, passhash);
+            var packet = new LoginPacket(username, Properties.Settings.Default.Password);
+            if (!Properties.Settings.Default.RememberPassword)
+            {
+                var passhash = Crypto.CreateSHA256(password);
+                Properties.Settings.Default.Password = passhash;
+                packet = new LoginPacket(username, passhash);
+            }
 
             Controller.SendAsync(packet);
             Controller.ReceiveTransmissionAsync();
@@ -67,7 +72,16 @@ namespace TI_CS_Chatapp
             if (AuthToken == null || AuthToken.Length <= 20) return;
 
             var disconnectPacket = new DisconnectPacket(AuthToken);
-            await Controller.SendAsync(disconnectPacket);
+            try
+            {
+                await Controller.SendAsync(disconnectPacket);
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine("An exception occured in the AppGlobal.LogoutFromServer function: " +
+                    e.Message);
+            }
+            
             Users.Clear();
         }
         
@@ -77,7 +91,7 @@ namespace TI_CS_Chatapp
             {
                 var packet = p as MessagePushPacket;
                 Console.WriteLine("push packet received!");
-                IncomingMessageEvent(packet.Message, false);
+                IncomingMessageEvent(packet.Message, false, SelectedUser);
             }
             else if (p is UserChangedPacket)
             {
@@ -136,7 +150,7 @@ namespace TI_CS_Chatapp
             AppGlobal.SelectedUser = Users.Where(user => username == user.Username).ToList().FirstOrDefault();
             foreach (ChatMessage message in GetMessages(username))
             {
-                IncomingMessageEvent(message, true);
+                IncomingMessageEvent(message, true, SelectedUser);
             }
         }
 
@@ -179,13 +193,8 @@ namespace TI_CS_Chatapp
             if (handler != null) handler(packet);
         }
 
-        private void OnIncomingMessageEvent(ChatMessage message)
-        {
-            MessageDelegate handler = IncomingMessageEvent;
-            if (handler != null) handler(message, true);
-        }
 
-        private void HandleIncomingChatMessageEvent(ChatMessage message, bool selectedContactChanged)
+        private void HandleIncomingChatMessageEvent(ChatMessage message, bool selectedContactChanged, User selectedUser)
         {
             if (!selectedContactChanged)
                 ChatMessages.Add(message);
@@ -197,7 +206,13 @@ namespace TI_CS_Chatapp
             var packet = new ChatPacket(message, AuthToken);
             Controller.SendAsync(packet);
             Controller.ReceiveTransmissionAsync();
-            IncomingMessageEvent(message, false);
+            IncomingMessageEvent(message, false, SelectedUser);
+        }
+
+        private void OnIncomingMessageEvent(ChatMessage message)
+        {
+            MessageDelegate handler = IncomingMessageEvent;
+            if (handler != null) handler(message, true, SelectedUser);
         }
 
 
