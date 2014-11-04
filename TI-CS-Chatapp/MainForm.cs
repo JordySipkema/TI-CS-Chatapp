@@ -17,6 +17,10 @@ namespace TI_CS_Chatapp
             InitializeComponent();
             _global = global;
             _global.LoginResultEvent += HandleLoginStatus;
+            menuStrip1.Items.Remove(debugToolStripMenuItem);
+#if DEBUG
+            menuStrip1.Items.Add(debugToolStripMenuItem);       
+#endif
         }
 
         // ** begin of events ** //
