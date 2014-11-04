@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ChatShared;
 using System.Net;
 using System.Net.Sockets;
+using System.Windows.Forms;
+using TI_CS_Chatapp.Properties;
 
 namespace TI_CS_Chatapp
 {
@@ -33,20 +27,20 @@ namespace TI_CS_Chatapp
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveAll();
-            this.Close();
+            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.ChangedFlag = false;
-            this.Close();
+            ChangedFlag = false;
+            Close();
         }
 
         private void tbServerIP_TextChanged(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.ServerIP != tbServerIP.Text)
+            if (Settings.Default.ServerIP != tbServerIP.Text)
             {
-                this.ChangedFlag = true;
+                ChangedFlag = true;
             }
         }
 
@@ -57,9 +51,9 @@ namespace TI_CS_Chatapp
 
         private void tbNickname_TextChanged(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.Nickname != tbNickname.Text)
+            if (Settings.Default.Nickname != tbNickname.Text)
             {
-                this.ChangedFlag = true;
+                ChangedFlag = true;
             }
         }
 
@@ -75,8 +69,8 @@ namespace TI_CS_Chatapp
         private void LoadSettings()
         {
             tbServerPortNumber.Text = ChatShared.Properties.Settings.Default.PortNumber.ToString();
-            tbNickname.Text = Properties.Settings.Default.Nickname;
-            tbServerIP.Text = Properties.Settings.Default.ServerIP;
+            tbNickname.Text = Settings.Default.Nickname;
+            tbServerIP.Text = Settings.Default.ServerIP;
             //Code for getting server IP
             var clientIP = Dns.GetHostEntry(Dns.GetHostName())
                 .AddressList.First(address => address.AddressFamily == AddressFamily.InterNetwork)
@@ -86,8 +80,8 @@ namespace TI_CS_Chatapp
 
         private void SaveAll()
         {
-            Properties.Settings.Default.Nickname = tbNickname.Text;
-            Properties.Settings.Default.ServerIP = tbServerIP.Text;
+            Settings.Default.Nickname = tbNickname.Text;
+            Settings.Default.ServerIP = tbServerIP.Text;
             //on the end
             ChangedFlag = false;
         }
@@ -95,15 +89,12 @@ namespace TI_CS_Chatapp
         // some code for making sure the settings is going to be saved
         private void CheckChangedFlag()
         {
-            if (this.ChangedFlag)
+            if (!ChangedFlag) return;
+
+            if (MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                if (MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    this.SaveAll();
-                }
+                SaveAll();
             }
-
         }
-
     }
 }

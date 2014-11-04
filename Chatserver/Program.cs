@@ -1,14 +1,10 @@
-﻿using Chatserver.Server;
+﻿using Chatserver.FileController;
+using Chatserver.Server;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using ChatShared.Entity;
-using ChatShared.Packet;
-using ChatShared.Packet.Push;
 using System.Threading;
-using Chatserver.FileController;
-using Chatserver.Properties;
 
 // ReSharper disable ObjectCreationAsStatement
 
@@ -16,14 +12,12 @@ namespace Chatserver
 {
     public class Program
     {
-        private readonly Thread _thread;
         public static void Main(string[] args)
         {
             new Program();
-            //stub method call so Datastorage will be initialized. 
-            Datastorage.Instance.GetHashCode();
-            string userInput;
-            userInput = Console.ReadLine();
+            //"useless" method call, this forces the Datastorage to be initialized. 
+            Datastorage.Instance.ToString();
+            var userInput = Console.ReadLine();
             while (userInput != "exit")
             {
                 switch(userInput)
@@ -33,9 +27,6 @@ namespace Chatserver
                         break;
                     case "exit":
                         return;
-                    default:
-
-                        break;
                 }
                 userInput = Console.ReadLine();
             }
@@ -45,9 +36,8 @@ namespace Chatserver
 
         public Program()
         {
-            _thread = new Thread(RunServer);
-            _thread.Start();
-            //RunServer();
+            var thread = new Thread(RunServer);
+            thread.Start();
         }
 
         public void RunServer()

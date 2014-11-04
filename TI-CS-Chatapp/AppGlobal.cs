@@ -1,17 +1,14 @@
 ﻿using ChatShared.Entity;
-using System.Collections.Generic;
-using System.Linq;
-using ChatShared.Properties;
-using TI_CS_Chatapp.Controller;
 using ChatShared.Packet;
+using ChatShared.Packet.Push;
 using ChatShared.Packet.Request;
 using ChatShared.Packet.Response;
-using ChatShared;
 using ChatShared.Utilities;
-using System.Threading;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using TI_CS_Chatapp.Controller;
 using TI_CS_Chatapp.UserControls;
-using ChatShared.Packet.Push;
 
 namespace TI_CS_Chatapp
 {

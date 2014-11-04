@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using ChatShared.Entity;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet.Response

@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChatShared.Entity;
 
@@ -24,29 +18,18 @@ namespace TI_CS_Chatapp
         public ContactsUserControl()
         {
             InitializeComponent();
-            MainForm MyForm = (MainForm)this.Parent;
+            var MyForm = (MainForm)Parent;
             AppGlobal.OnlineStatusOfContactEvent += HandleOnlineStatusOfContact;
         }
 
         private void HandleOnlineStatusOfContact(User user)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                this.Invoke((new Action(() => HandleOnlineStatusOfContact(user))));
+                Invoke((new Action(() => HandleOnlineStatusOfContact(user))));
                 return;
             }
-            /*
-            if (_userDict.ContainsKey(username))
-            {
-                _userDict[username] = onlinestatus;
-            }
-            else
-            {
-                _userDict.Add(username, onlinestatus);
-            }
-            */
             RemoveContactsFromListBox();
-            // Remove duplicates
             LoadContacts(AppGlobal.Users.Where(x => x.Username != Properties.Settings.Default.Username).ToList());
         }
 
@@ -58,7 +41,7 @@ namespace TI_CS_Chatapp
 
         public void LoadContacts(List<User> nicknames)
         {
-            foreach (User u in nicknames)
+            foreach (var u in nicknames)
             {
                 lboxContacts.Items.Add(u);
             }
@@ -75,7 +58,7 @@ namespace TI_CS_Chatapp
             // AppGlobal.SelectedContact = lboxContacts.SelectedItem.ToString();
             if (lboxContacts.SelectedItem == null) 
                 return;
-            MainForm MyForm = (MainForm)this.Parent;
+            var MyForm = (MainForm)this.Parent;
             MyForm.ClearChatHistory();
             OnSelectedContactEvent(lboxContacts.SelectedItem.ToString());
             
@@ -83,7 +66,7 @@ namespace TI_CS_Chatapp
 
         private void OnSelectedContactEvent(string contact)
         {
-            SelectedContactDelegate handler = SelectedContactEvent;
+            var handler = SelectedContactEvent;
             if (handler != null) handler(contact);
         }
     }

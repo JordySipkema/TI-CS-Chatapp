@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Remoting;
 using Newtonsoft.Json.Linq;
 using ChatShared.Entity;
 

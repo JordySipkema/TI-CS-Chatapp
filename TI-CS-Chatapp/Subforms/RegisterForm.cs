@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChatShared.Packet.Request;
-using ChatShared.Packet.Response;
-using ChatShared.Packet;
 using ChatShared.Utilities;
 using TI_CS_Chatapp.Controller;
 
@@ -55,7 +46,7 @@ namespace TI_CS_Chatapp.Subforms
         private void btnCancel_Click(object sender, EventArgs e)
         {
             ChangedFlag = false;
-            this.Close();
+            Close();
         }
 
         private void RegisterForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -65,7 +56,7 @@ namespace TI_CS_Chatapp.Subforms
 
         private void CheckChangedFlag(FormClosingEventArgs args)
         {
-            if (this.ChangedFlag)
+            if (ChangedFlag)
             {
                 var b = MessageBox.Show("Save your changes before exit?", "Save changes?", MessageBoxButtons.YesNoCancel);
                 if (b == DialogResult.Yes)
@@ -87,9 +78,10 @@ namespace TI_CS_Chatapp.Subforms
         private void Register()
         {
             var packet = new RegisterPacket(tbNickname.Text, tbUsername.Text, Crypto.CreateSHA256(tbPassword.Text));
-            Controller.TCPController.Instance.RunClient();
-            Controller.TCPController.Instance.SendAsync(packet);
-            Controller.TCPController.Instance.ReceiveTransmissionAsync();
+            TCPController.Instance.RunClient();
+            // SendAsync is not awaited, because the sending should complete before we continue to recieve!
+            TCPController.Instance.SendAsync(packet);
+            TCPController.Instance.ReceiveTransmissionAsync();
         }
 
         private void HandleStatus(string status)
@@ -97,14 +89,14 @@ namespace TI_CS_Chatapp.Subforms
             Status = status;
             if (status == "200") // OK
             {
-                if (this.InvokeRequired)
+                if (InvokeRequired)
                 {
-                    this.Invoke((new Action(() => HandleStatus(status))));
+                    Invoke((new Action(() => HandleStatus(status))));
                     return;
                 }
                 MessageBox.Show("Thank you for your registration!", "Registration succeed", MessageBoxButtons.OK);
                 ChangedFlag = false;
-                this.Close();
+                Close();
                 
             }
             else

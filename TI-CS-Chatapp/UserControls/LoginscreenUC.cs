@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TI_CS_Chatapp.UserControls
@@ -15,17 +8,17 @@ namespace TI_CS_Chatapp.UserControls
         public LoginscreenUC()
         {
             InitializeComponent();
-            if (Properties.Settings.Default.RememberPassword)
-            {
-                chkPassword.Checked = true;
-                tbUsername.Text = Properties.Settings.Default.Username;
-                tbPassword.Text = "******";
-            }
+
+            if (!Properties.Settings.Default.RememberPassword) return;
+
+            chkPassword.Checked = true;
+            tbUsername.Text = Properties.Settings.Default.Username;
+            tbPassword.Text = "******";
         }
 
         private void lblSignin_Click(object sender, EventArgs e)
         {
-            MainForm MyForm = (MainForm)this.Parent;
+            var MyForm = (MainForm)Parent;
             tbPassword.Text = tbPassword.Text.Trim();
             MyForm.Login(tbUsername.Text, tbPassword.Text, chkPassword.CheckState.HasFlag(CheckState.Checked));
             tbPassword.Clear();

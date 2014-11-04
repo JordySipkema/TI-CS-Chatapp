@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ChatShared.Entity;
 
@@ -30,11 +23,11 @@ namespace TI_CS_Chatapp.UserControls
         private void HandleIncomingChatMessageEvent(ChatShared.Entity.ChatMessage message, bool contactChanged, User selectedUser)
         {
             if (selectedUser == null) return;
-            if (selectedUser.Nickname == message.Sender || _outgoingmsgFlag)
+            if (selectedUser.Nickname.Equals(message.Sender, StringComparison.CurrentCultureIgnoreCase) || _outgoingmsgFlag)
             {
-                if (this.InvokeRequired)
+                if (InvokeRequired)
                 {
-                    this.Invoke((new Action(() => HandleIncomingChatMessageEvent(message, contactChanged, selectedUser))));
+                    Invoke((new Action(() => HandleIncomingChatMessageEvent(message, contactChanged, selectedUser))));
                     return;
                 }
                 tbMsgHistory.AppendText((message.Timestamp.ToShortTimeString() + " " + message.Sender + ": " + message.Message + "\r\n"));
@@ -56,7 +49,7 @@ namespace TI_CS_Chatapp.UserControls
         private void SendMessage()
         {
 
-            if ((Properties.Settings.Default.Username == null) || (AppGlobal.SelectedUser.Username == null))
+            if (String.IsNullOrEmpty(Properties.Settings.Default.Username) || String.IsNullOrEmpty(AppGlobal.SelectedUser.Username))
                 return;
             tbMessage.Text = tbMessage.Text.Trim();
             _outgoingmsgFlag = true;
@@ -66,7 +59,7 @@ namespace TI_CS_Chatapp.UserControls
 
         public void ClearHistory()
         {
-            tbMsgHistory.Text = "";
+            tbMsgHistory.Text = String.Empty;
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)

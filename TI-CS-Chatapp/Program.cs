@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using ChatShared;
 
 namespace TI_CS_Chatapp
 {

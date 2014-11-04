@@ -1,5 +1,4 @@
-﻿
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace ChatShared.Packet.Request
 {
